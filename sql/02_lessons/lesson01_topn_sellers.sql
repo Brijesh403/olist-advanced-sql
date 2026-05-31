@@ -1,8 +1,21 @@
 -- ============================================================
 -- Olist Advanced SQL Business Case Study
 -- Lesson 01: Top-N Per Group (Window Functions - Ranking)
--- Business Question: Top 3 sellers by revenue in each
---                    of Olist's top 5 product categories
+-- Business Question: Top 3 sellers by revenue in each of
+--                    Olist's top 5 product categories
+--
+-- Why this matters: Category managers use this to identify
+-- which sellers get premium placement, better commission
+-- terms, or co-marketing budget. The revenue gap between
+-- rank 1 and rank 3 reveals category concentration risk.
+--
+-- Key finding: watches_gifts shows healthy competition
+-- (201K / 192K / 169K). bed_bath_table is concentrated —
+-- rank 1 and 2 earn 3x rank 3, giving them outsized
+-- negotiating power over Olist's commission structure.
+--
+-- Concepts: ROW_NUMBER(), PARTITION BY, 3-stage CTE pattern
+-- Author: Brijesh Vaghela
 -- ============================================================
 USE olist;
 
