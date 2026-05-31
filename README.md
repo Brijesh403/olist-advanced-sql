@@ -30,7 +30,7 @@ The decision is the point.
 - Sellers outperforming their state's average rating
 - Seller-level delivery SLA compliance
 
-**Customer Behaviour**  
+**Customer Behaviour**
 - Monthly cohort retention in pure SQL — no Python, no pivoting outside the DB
 - Customers with the longest consecutive ordering streaks (gaps & islands)
 - City and state-level order volume distribution
@@ -45,8 +45,8 @@ The decision is the point.
 
 ## The dataset
 
-**Source:** [Brazilian E-Commerce Public Dataset — Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)  
-**Database:** MySQL 8.0  
+**Source:** [Brazilian E-Commerce Public Dataset — Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
+**Database:** MySQL 8.0
 **Scale:** 8 tables, ~530K rows total across all tables
 
 | Table | Rows | What it contains |
@@ -67,19 +67,20 @@ The decision is the point.
 I ran into two real data issues worth documenting:
 
 **1. The reviews CSV breaks bulk loading.**
-`LOAD DATA INFILE` fails at row 77,917 because customer review 
-text contains embedded newlines and imperfectly escaped quotes. 
-MySQL's line parser trips on them. The fix is pandas — a proper 
-CSV parser that handles multi-line quoted fields. The other 7 
+`LOAD DATA INFILE` fails at row 77,917 because customer review
+text contains embedded newlines and imperfectly escaped quotes.
+MySQL's line parser trips on them. The fix is pandas — a proper
+CSV parser that handles multi-line quoted fields. The other 7
 tables load fine via bulk load. See `python/load_reviews.py`.
 
 **2. Category names loaded with trailing `\r` characters.**
-Windows CRLF line endings in `product_category_name_translation.csv` 
-left carriage returns on every English category name. A single 
-UPDATE with REPLACE() cleaned it. Small bug, but the kind that 
+Windows CRLF line endings in `product_category_name_translation.csv`
+left carriage returns on every English category name. A single
+UPDATE with REPLACE() cleaned it. Small bug, but the kind that
 silently breaks JOINs if you don't catch it.
 
 ---
+
 ## Repo structure
 
 ```
@@ -101,36 +102,22 @@ olist-advanced-sql/
 │
 └── data/                           not tracked — download from Kaggle
 ```
-
-## How to run it yourself
-
-```bash
-# 1. Download CSVs from Kaggle link above, unzip into data/
-# 2. In MySQL Workbench:
-source sql/01_setup/01_create_tables.sql
-source sql/01_setup/02_load_data.sql
-# 3. Load reviews:
-python python/load_reviews.py
-# 4. Run any lesson file from sql/02_lessons/
-```
-
-MySQL 8.0+ required — window functions don't exist below 8.0.
-
 ---
 
 ## Key findings so far
 
-**Lesson 1 — Seller concentration by category**  
-`watches_gifts` top 3 sellers did 201K / 192K / 169K revenue — 
-tight competition, no single seller has outsized leverage.  
-`bed_bath_table` top 3 did 165K / 152K / 54K — the drop-off to 
-rank 3 is steep, meaning two sellers dominate this category and 
+**Lesson 1 — Seller concentration by category**
+`watches_gifts` top 3 sellers did 201K / 192K / 169K revenue —
+tight competition, no single seller has outsized leverage.
+`bed_bath_table` top 3 did 165K / 152K / 54K — the drop-off to
+rank 3 is steep, meaning two sellers dominate this category and
 hold significant commission negotiation power over the platform.
 
 *More findings added as each lesson completes.*
 
 ---
 
-**Brijesh Vaghela**  
-[LinkedIn](https://www.linkedin.com/in/brijesh-vaghela) · 
-[GitHub](https://github.com/Brijesh403) · 
+**Brijesh Vaghela**
+[LinkedIn](https://www.linkedin.com/in/brijesh-vaghela) ·
+[GitHub](https://github.com/Brijesh403) ·
+Also see: [ShopSense Product Analytics](https://github.com/Brijesh403/shopsense-product-analytics)
