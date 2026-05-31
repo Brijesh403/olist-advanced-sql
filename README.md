@@ -80,22 +80,27 @@ UPDATE with REPLACE() cleaned it. Small bug, but the kind that
 silently breaks JOINs if you don't catch it.
 
 ---
-
 ## Repo structure
+
+```
 olist-advanced-sql/
+│
 ├── sql/
 │   ├── 01_setup/
-│   │   ├── 01_create_tables.sql   — schema + foreign keys
-│   │   └── 02_load_data.sql       — bulk load 7 tables + notes on reviews
+│   │   ├── 01_create_tables.sql    schema + foreign keys for 8 tables
+│   │   └── 02_load_data.sql        bulk load 7 tables + notes on reviews
+│   │
 │   └── 02_lessons/
-│       └── lesson01_topn_sellers.sql   — and growing
+│       └── lesson01_topn_sellers.sql    top-N sellers per category
+│
 ├── python/
-│   └── load_reviews.py            — pandas loader for order_reviews
+│   └── load_reviews.py             pandas loader for order_reviews CSV
+│
 ├── docs/
-│   └── business_case.md           — findings + business interpretation
-└── data/                          — not tracked (download from Kaggle)
-
----
+│   └── business_case.md            findings + business interpretation
+│
+└── data/                           not tracked — download from Kaggle
+```
 
 ## How to run it yourself
 
