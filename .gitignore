@@ -1,0 +1,12 @@
+# data — too large, downloaded from Kaggle instead
+data/
+*.csv
+*.zip
+
+# python env
+venv/
+__pycache__/
+*.pyc
+
+# editor
+.vscode/
