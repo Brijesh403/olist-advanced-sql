@@ -59,11 +59,11 @@ The decision is the point.
 | orders | 99,441 | The spine — status + 5 timestamps from purchase to delivery |
 | order_items | 112,650 | Line items — price, freight, which seller fulfilled it |
 | order_payments | 103,886 | Payment type, installments, value |
-| order_reviews | 99,224 | 1–5 scores + free-text comments |
+| order_reviews | 99,224 | 1-5 scores + free-text comments |
 | customers | 99,441 | City, state — no PII |
 | products | 32,951 | Category, physical dimensions |
 | sellers | 3,095 | City, state |
-| category_translation | 71 | Portuguese → English category names |
+| category_translation | 71 | Portuguese to English category names |
 
 ---
 
@@ -79,7 +79,7 @@ MySQL's line parser trips on them. The fix is pandas — a proper
 CSV parser that handles multi-line quoted fields. The other 7
 tables load fine via bulk load. See `python/load_reviews.py`.
 
-**2. Category names loaded with trailing `\r` characters.**
+**2. Category names loaded with trailing carriage return characters.**
 
 Windows CRLF line endings in `product_category_name_translation.csv`
 left carriage returns on every English category name. A single
@@ -89,6 +89,28 @@ silently breaks JOINs if you don't catch it.
 ---
 
 ## Repo structure
+
+    olist-advanced-sql/
+    |
+    |-- sql/
+    |   |-- 01_setup/
+    |   |   |-- 01_create_tables.sql               schema + foreign keys for 8 tables
+    |   |   |-- 02_load_data.sql                   bulk load 7 tables + notes on reviews
+    |   |
+    |   |-- 02_findings/
+    |       |-- top_sellers_by_category.sql         top-N sellers per category
+    |       |-- top_cities_by_state.sql             top-3 cities per state
+    |       |-- revenue_running_total.sql           rolling revenue + 7-day moving avg
+    |       |-- category_orders_running_total.sql   running total of orders per category
+    |       |-- monthly_revenue_growth.sql          month-over-month revenue growth (LAG)
+    |
+    |-- python/
+    |   |-- load_reviews.py                        pandas loader for order_reviews CSV
+    |
+    |-- docs/
+    |   |-- business_case.md                       findings + business interpretation
+    |
+    |-- data/                                      not tracked — download from Kaggle
 
 ---
 
@@ -105,10 +127,10 @@ hold significant commission negotiation power over the platform.
 
 ### City concentration by state
 
-DF (Brasília) shows extreme concentration — 2,131 orders from
+DF (Brasilia) shows extreme concentration — 2,131 orders from
 the capital vs negligible volumes elsewhere in the state.
 
-SP shows healthier distribution across São Paulo, Campinas,
+SP shows healthier distribution across Sao Paulo, Campinas,
 and Guarulhos — multiple cities absorbing demand.
 
 ### Olist GMV trajectory
