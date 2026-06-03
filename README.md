@@ -92,9 +92,10 @@ olist-advanced-sql/
 │   │   └── 02_load_data.sql        bulk load 7 tables + notes on reviews
 │   │
 │   └── 02_findings/
-│       ├── finding01_topn_sellers.sql         top-N sellers per category
-│       ├── finding01_practice_topn_cities.sql  top-3 cities per state
-│       └── finding02_rolling_revenue.sql       rolling revenue + 7-day moving avg
+│       ├── top_sellers_by_category.sql          top-N sellers per category
+│       ├── top_cities_by_state.sql               top-3 cities per state
+│       ├── revenue_running_total.sql             rolling revenue + 7-day moving avg
+│       └── category_orders_running_total.sql     running total of orders per category
 │
 ├── python/
 │   └── load_reviews.py             pandas loader for order_reviews CSV
