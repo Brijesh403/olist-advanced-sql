@@ -83,6 +83,27 @@ silently breaks JOINs if you don't catch it.
 
 ## Repo structure
 
+```
+olist-advanced-sql/
+│
+├── sql/
+│   ├── 01_setup/
+│   │   ├── 01_create_tables.sql    schema + foreign keys for 8 tables
+│   │   └── 02_load_data.sql        bulk load 7 tables + notes on reviews
+│   │
+│   └── 02_findings/
+│       ├── finding01_topn_sellers.sql         top-N sellers per category
+│       ├── finding01_practice_topn_cities.sql  top-3 cities per state
+│       └── finding02_rolling_revenue.sql       rolling revenue + 7-day moving avg
+│
+├── python/
+│   └── load_reviews.py             pandas loader for order_reviews CSV
+│
+├── docs/
+│   └── business_case.md            findings + business interpretation
+│
+└── data/                           not tracked — download from Kaggle
+```
 ---
 
 ## Key findings so far
