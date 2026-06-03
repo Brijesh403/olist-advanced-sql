@@ -60,4 +60,54 @@ run queries without checking your lookup table first.
 
 ---
 
-*Lesson 2 findings will appear here after the next session.*
+## Lesson 2 — What does Olist's revenue trajectory look like?
+
+**The question a growth or finance team actually asks:**
+Not "how much did we make this month" — but "where are we in 
+the cumulative story, and is the underlying trend accelerating 
+or flattening?"
+
+**Query approach:**
+Two-stage CTE. First aggregate to one revenue number per day 
+(joining order_items to orders for the timestamp, excluding 
+cancelled orders). Then apply two window functions over the 
+ordered date sequence — a running total with 
+ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW, 
+and a 7-day moving average with ROWS BETWEEN 6 PRECEDING 
+AND CURRENT ROW. The frame slides forward one row at a time, 
+recalculating both metrics at each date.
+
+The date filter lives in the outer query, not the CTE — which 
+means the running total reflects true cumulative GMV from the 
+first order ever, not an artificially restarted count.
+
+**What I found:**
+
+| Milestone | Date | Running Total |
+|-----------|------|---------------|
+| First order ever | 2016-09-04 | R$72.89 |
+| Revenue switches on | 2016-10-04 | R$10,221 cumulative |
+| End of dataset | 2018-09-03 | R$13,496,408 total GMV |
+
+**What this means for the business:**
+Olist went from a single R$72 order in September 2016 to 
+R$13.5M in cumulative GMV by mid-2018 — roughly 24 months 
+of operation. The October 2016 jump (441 to 9,571 in one day) 
+marks the likely inflection point where the platform opened 
+meaningfully to sellers or ran its first acquisition push. 
+That single week in October 2016 added more revenue than the 
+entire previous month.
+
+The 7-day moving average on the final days drops from 18K to 
+5.5K — not a business declining, but the dataset ending. 
+A real dashboard would flag this as a data-completeness issue 
+rather than a trend signal.
+
+**SQL concept that made this possible:**
+ROWS BETWEEN defines a sliding frame relative to each row. 
+UNBOUNDED PRECEDING means "from the very first row" — giving 
+the running total. 6 PRECEDING means "this row plus the 6 
+before it" — giving the 7-day window. Without ORDER BY inside 
+OVER(), the frame has no sequence and MySQL returns the grand 
+total for every single row instead. ORDER BY inside OVER() is 
+what makes the calculation sequential.
