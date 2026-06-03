@@ -131,4 +131,27 @@ rather than a trend signal.
 
 ---
 
+## Finding 2 (practice) — How has each category's order volume accumulated?
+
+**The question:**
+Which categories show consistent month-on-month growth vs
+which had isolated spikes? A running total per category
+reveals the accumulation story that monthly snapshots hide.
+
+**Query approach:**
+Three-stage CTE. Aggregate order counts per (category, year,
+month). Then apply SUM() OVER with PARTITION BY category —
+this is the critical detail: the running total restarts
+independently for each category, not one global counter.
+Filter NULL categories (products with no category assigned)
+to keep the analysis clean.
+
+**What to look for in the output:**
+A category whose running total climbs steadily every month
+is growing organically. A category whose running total jumps
+in one month then barely moves has demand concentration in
+a single period — worth investigating why.
+
+---
+
 *Further findings will appear here as the analysis progresses.*
