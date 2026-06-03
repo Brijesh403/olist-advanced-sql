@@ -154,4 +154,46 @@ a single period — worth investigating why.
 
 ---
 
+## Finding 3 — Is Olist's revenue growth accelerating or slowing?
+
+**The question a growth team asks every Monday:**
+Not "how much did we make" — but "are we growing faster or
+slower than last month, and why?"
+
+**Query approach:**
+Two-stage CTE. First aggregate revenue per calendar month.
+Then use LAG(revenue, 1) OVER (ORDER BY month) to pull the
+previous month's revenue onto the same row — no self-join
+needed. Growth % is simple arithmetic from there:
+(this_month - last_month) / last_month * 100.
+
+The first row returns NULL for previous month — there is no
+month before the first. That's correct, not an error.
+
+**Results (key months):**
+
+| Month | Revenue | MoM Growth |
+|-------|---------|------------|
+| 2017-03 | R$368,341 | +50.4% |
+| 2017-05 | R$503,159 | +42.2% |
+| 2017-11 | R$1,003,862 | +52.1% — Black Friday Brazil |
+| 2017-12 | R$742,183 | -26.1% — post-holiday unwind |
+| 2018-04 | R$993,592 | +1.3% |
+| 2018-05 | R$992,871 | -0.1% — plateau begins |
+
+**Business insight:**
+Three distinct phases are visible. Early 2017 shows explosive
+growth (50-100% MoM) as the platform scales from near-zero.
+November 2017 is the clear peak — Black Friday Brazil pushed
+Olist past R$1M monthly revenue for the first and only time
+in the dataset. From April 2018 onward, the business plateaus
+around R$850K-R$1M with single-digit growth — a signal that
+current market penetration may be saturating.
+
+**Data quality note:**
+November 2016 is missing entirely from the data — LAG() treats
+December 2016 as "the month after October" which makes the
+early growth rates unreliable. Pre-2017 months are best treated
+as a beta period and excluded from trend analysis.
+
 *Further findings will appear here as the analysis progresses.*

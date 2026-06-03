@@ -128,6 +128,14 @@ month-on-month accumulation — healthy organic growth. Categories
 whose running totals jump in one month then flatline signal
 demand concentration in a single period.
 
+### Revenue growth phases
+
+Three distinct phases: explosive early growth in 2017 (50-100%
+MoM), a Black Friday peak in November 2017 at R$1,003,862
+(+52.1% MoM — the only month to cross R$1M), and a plateau
+from April 2018 onward with single-digit or negative growth
+hovering around R$850K-R$1M monthly.
+
 *More findings added as the analysis progresses.*
 
 ---
