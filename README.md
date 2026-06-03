@@ -45,8 +45,8 @@ The decision is the point.
 
 ## The dataset
 
-**Source:** [Brazilian E-Commerce Public Dataset — Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
-**Database:** MySQL 8.0
+**Source:** [Brazilian E-Commerce Public Dataset — Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)  
+**Database:** MySQL 8.0  
 **Scale:** 8 tables, ~530K rows total across all tables
 
 | Table | Rows | What it contains |
@@ -83,41 +83,36 @@ silently breaks JOINs if you don't catch it.
 
 ## Repo structure
 
-```
-olist-advanced-sql/
-│
-├── sql/
-│   ├── 01_setup/
-│   │   ├── 01_create_tables.sql    schema + foreign keys for 8 tables
-│   │   └── 02_load_data.sql        bulk load 7 tables + notes on reviews
-│   │
-│   └── 02_lessons/
-│       └── lesson01_topn_sellers.sql    top-N sellers per category
-│
-├── python/
-│   └── load_reviews.py             pandas loader for order_reviews CSV
-│
-├── docs/
-│   └── business_case.md            findings + business interpretation
-│
-└── data/                           not tracked — download from Kaggle
-```
 ---
 
 ## Key findings so far
 
-**Lesson 1 — Seller concentration by category**
+**Finding 1 — Seller concentration by category**
 `watches_gifts` top 3 sellers did 201K / 192K / 169K revenue —
 tight competition, no single seller has outsized leverage.
 `bed_bath_table` top 3 did 165K / 152K / 54K — the drop-off to
 rank 3 is steep, meaning two sellers dominate this category and
 hold significant commission negotiation power over the platform.
 
-*More findings added as each lesson completes.*
+**Finding 1 (geographic) — City concentration by state**
+DF (Brasília) shows extreme concentration — 2,131 orders from
+the capital vs negligible volumes elsewhere in the state.
+SP shows healthier distribution across São Paulo, Campinas,
+and Guarulhos — multiple cities absorbing demand.
+
+**Finding 2 — Olist GMV trajectory**
+First ever order: R$72.89 on September 4, 2016.
+Total GMV across the dataset: R$13,496,408 by September 2018.
+The October 2016 inflection — revenue jumping from R$441 to
+R$9,571 in a single day — marks when the platform meaningfully
+opened to sellers. The 7-day moving average makes this
+acceleration visible where raw daily numbers just look like noise.
+
+*More findings added as the analysis progresses.*
 
 ---
 
-**Brijesh Vaghela**
+**Brijesh Vaghela**  
 [LinkedIn](https://www.linkedin.com/in/brijesh-vaghela) ·
 [GitHub](https://github.com/Brijesh403) ·
 Also see: [ShopSense Product Analytics](https://github.com/Brijesh403/shopsense-product-analytics)
