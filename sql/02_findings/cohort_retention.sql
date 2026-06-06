@@ -1,6 +1,6 @@
 -- ============================================================
 -- Olist Advanced SQL Business Case Study
--- Finding: Monthly Cohort Retention
+-- Finding: Monthly Cohort Retention (Pivot Table)
 -- Business Question: What percentage of customers return to
 --                    order again after their first purchase?
 --
@@ -15,13 +15,16 @@
 -- every order look like a new customer — a data trap that
 -- produces completely wrong retention numbers.
 --
--- Concepts: Multi-stage CTE, PERIOD_DIFF, cohort logic, retention %
+-- Key finding: Month-1 retention is below 1% across every
+-- cohort. Olist is a one-time-buyer marketplace — growth
+-- depends entirely on continuous new customer acquisition.
+--
+-- Concepts: Multi-stage CTE, PERIOD_DIFF, conditional aggregation pivot
 -- Author: Brijesh Vaghela
 -- ============================================================
 USE olist;
 
 WITH first_order AS (
-    -- Stage 1: each customer's first order date = their cohort
     SELECT
         c.customer_unique_id,
         MIN(DATE(o.order_purchase_timestamp))                  AS first_order_date,
@@ -32,7 +35,6 @@ WITH first_order AS (
     GROUP BY c.customer_unique_id
 ),
 order_activity AS (
-    -- Stage 2: for every order, calculate months since first order
     SELECT
         c.customer_unique_id,
         f.cohort_month,
@@ -46,7 +48,6 @@ order_activity AS (
     WHERE o.order_status != 'canceled'
 ),
 cohort_size AS (
-    -- Stage 3: how many customers in each cohort
     SELECT
         cohort_month,
         COUNT(DISTINCT customer_unique_id) AS cohort_customers
@@ -54,7 +55,6 @@ cohort_size AS (
     GROUP BY cohort_month
 ),
 monthly_retention AS (
-    -- Stage 4: how many from each cohort were active at each month offset
     SELECT
         cohort_month,
         month_number,
@@ -62,14 +62,22 @@ monthly_retention AS (
     FROM order_activity
     GROUP BY cohort_month, month_number
 )
--- Stage 5: retention rate
 SELECT
     mr.cohort_month,
-    mr.month_number,
-    cs.cohort_customers,
-    mr.active_customers,
-    ROUND(mr.active_customers / cs.cohort_customers * 100, 1) AS retention_pct
+    cs.cohort_customers                                                         AS m0,
+    SUM(CASE WHEN mr.month_number = 1  THEN mr.active_customers END)            AS m1,
+    SUM(CASE WHEN mr.month_number = 2  THEN mr.active_customers END)            AS m2,
+    SUM(CASE WHEN mr.month_number = 3  THEN mr.active_customers END)            AS m3,
+    SUM(CASE WHEN mr.month_number = 4  THEN mr.active_customers END)            AS m4,
+    SUM(CASE WHEN mr.month_number = 5  THEN mr.active_customers END)            AS m5,
+    SUM(CASE WHEN mr.month_number = 6  THEN mr.active_customers END)            AS m6,
+    SUM(CASE WHEN mr.month_number = 7  THEN mr.active_customers END)            AS m7,
+    SUM(CASE WHEN mr.month_number = 8  THEN mr.active_customers END)            AS m8,
+    SUM(CASE WHEN mr.month_number = 9  THEN mr.active_customers END)            AS m9,
+    SUM(CASE WHEN mr.month_number = 10 THEN mr.active_customers END)            AS m10,
+    SUM(CASE WHEN mr.month_number = 11 THEN mr.active_customers END)            AS m11,
+    SUM(CASE WHEN mr.month_number = 12 THEN mr.active_customers END)            AS m12
 FROM monthly_retention mr
 JOIN cohort_size cs ON cs.cohort_month = mr.cohort_month
-WHERE mr.month_number BETWEEN 0 AND 12
-ORDER BY mr.cohort_month, mr.month_number;
+GROUP BY mr.cohort_month, cs.cohort_customers
+ORDER BY mr.cohort_month;
