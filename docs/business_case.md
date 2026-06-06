@@ -216,12 +216,22 @@ divide to get retention %.
 
 **Results (selected cohorts):**
 
-| Cohort | Cohort Size | Month 1 | Month 3 | Month 6 | Month 12 |
-|--------|-------------|---------|---------|---------|----------|
-| 2017-01 | 762 | 0.4% | 0.1% | 0.5% | 0.8% |
-| 2017-05 | 3,571 | 0.5% | 0.4% | 0.4% | 0.3% |
-| 2017-11 | 7,270 | 0.6% | 0.2% | 0.1% | — |
-| 2018-04 | 6,700 | 0.6% | 0.2% | — | — |
+**Results (cohort retention pivot — active customers):**
+
+| Cohort | Size | m1 | m2 | m3 | m4 | m5 | m6 |
+|--------|------|----|----|----|----|----|-----|
+| 2017-01 | 762 | 3 | 2 | 1 | 3 | 1 | 4 |
+| 2017-05 | 3,571 | 17 | 18 | 14 | 11 | 12 | 15 |
+| 2017-08 | 4,162 | 28 | 14 | 11 | 15 | 22 | 12 |
+| 2017-11 | 7,270 | 40 | 28 | 12 | 14 | 13 | 8 |
+| 2018-01 | 6,992 | 23 | 26 | 20 | 20 | 11 | 12 |
+| 2018-04 | 6,700 | 39 | 21 | 16 | 9 | — | — |
+
+The triangle shape forms naturally — newer cohorts have fewer
+months of data. Every cohort shows the same pattern: thousands
+acquired at m0, single or double digits by m1. The November
+2017 Black Friday cohort acquired 7,270 customers — only 40
+returned the following month.
 
 **Business insight:**
 Olist's customer base is almost entirely one-time buyers.
