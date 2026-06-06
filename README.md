@@ -1,21 +1,16 @@
 # Olist E-Commerce — Advanced SQL Business Case Study
 
-I built this project because I wanted to move past basic SQL.
-GROUP BY and LIMIT will get you through a tutorial — they won't get
-you through a live SQL interview round. This is my attempt to close
-that gap using a real, publicly available dataset that the data
-community actually respects.
+A business case study built on the Olist Brazilian E-Commerce
+dataset — 8 relational tables, 100K+ orders, real data with
+real messiness. Each query answers a specific business question:
+seller concentration risk, cohort retention, revenue trajectory,
+delivery SLA impact on reviews.
 
-The Olist Brazilian E-Commerce dataset has 8 relational tables,
-100K+ orders, real messiness (embedded newlines in review text,
-Portuguese category names, NULL delivery timestamps for cancelled
-orders), and enough business surface area to ask questions that
-actually mean something. That's why I picked it.
-
-Every query in this repo starts from a business question — not
-"demonstrate window functions" but "which sellers should get
-premium placement in each category?" The SQL is the means.
-The decision is the point.
+The dataset has embedded newlines in review text, Portuguese
+category names requiring translation joins, and NULL delivery
+timestamps for cancelled orders — the kind of data quality
+issues that don't exist in tutorial datasets but show up in
+every production database.
 
 ---
 
