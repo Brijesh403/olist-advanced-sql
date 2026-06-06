@@ -103,6 +103,7 @@ silently breaks JOINs if you don't catch it.
     |       |-- revenue_running_total.sql           rolling revenue + 7-day moving avg
     |       |-- category_orders_running_total.sql   running total of orders per category
     |       |-- monthly_revenue_growth.sql          month-over-month revenue growth (LAG)
+    |       |-- cohort_retention.sql                monthly cohort retention analysis
     |
     |-- python/
     |   |-- load_reviews.py                        pandas loader for order_reviews CSV
@@ -157,6 +158,15 @@ MoM), a Black Friday peak in November 2017 at R$1,003,862
 (+52.1% MoM — the only month to cross R$1M), and a plateau
 from April 2018 onward with single-digit or negative growth
 hovering around R$850K-R$1M monthly.
+
+### Customer retention — the one-time buyer problem
+
+Month-1 retention is below 1% across every cohort. Even
+the massive November 2017 Black Friday cohort (7,270 new
+customers) retained just 0.6% the next month. Olist's
+revenue depends entirely on acquiring new customers every
+month — there is no meaningful returning customer base.
+
 
 *More findings added as the analysis progresses.*
 

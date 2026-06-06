@@ -196,4 +196,54 @@ December 2016 as "the month after October" which makes the
 early growth rates unreliable. Pre-2017 months are best treated
 as a beta period and excluded from trend analysis.
 
+---
+
+## Finding 4 — Do Olist customers come back after their first order?
+
+**The question every product team needs answered:**
+What percentage of customers acquired in each month return to
+place another order? Is the business building a loyal base, or
+is every month's revenue dependent on acquiring new buyers?
+
+**Query approach:**
+Five-stage CTE — the most complex query in this project.
+First identify each customer's cohort (their first order month)
+using customer_unique_id, not customer_id — a critical Olist
+data trap, since one person can have multiple customer_id values
+across orders. Then calculate month offsets using PERIOD_DIFF,
+count cohort sizes, count active customers at each offset, and
+divide to get retention %.
+
+**Results (selected cohorts):**
+
+| Cohort | Cohort Size | Month 1 | Month 3 | Month 6 | Month 12 |
+|--------|-------------|---------|---------|---------|----------|
+| 2017-01 | 762 | 0.4% | 0.1% | 0.5% | 0.8% |
+| 2017-05 | 3,571 | 0.5% | 0.4% | 0.4% | 0.3% |
+| 2017-11 | 7,270 | 0.6% | 0.2% | 0.1% | — |
+| 2018-04 | 6,700 | 0.6% | 0.2% | — | — |
+
+**Business insight:**
+Olist's customer base is almost entirely one-time buyers.
+Month-1 retention is below 1% across every single cohort —
+including the massive November 2017 Black Friday cohort
+(7,270 customers acquired, only 40 returned the next month).
+
+This means Olist cannot rely on repeat revenue. Growth depends
+entirely on continuously acquiring new customers. Every month's
+revenue comes from that month's new buyers, not from a loyal
+returning base.
+
+The strategic question this raises: should Olist invest in
+reactivation campaigns? At 0.3% retention, the ROI on email
+winback or discount offers is likely near zero. The better
+play is to accept the one-time buyer model and optimise for
+first-order margin and customer acquisition cost.
+
+**Critical data note:**
+Using customer_id instead of customer_unique_id would make
+every order appear to come from a new customer — producing
+near-zero retention that's wrong for the wrong reason.
+customer_unique_id is the true person identifier in this
+dataset.
 *Further findings will appear here as the analysis progresses.*
