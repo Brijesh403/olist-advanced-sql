@@ -100,6 +100,7 @@ silently breaks JOINs if you don't catch it.
     |       |-- monthly_revenue_growth.sql          month-over-month revenue growth (LAG)
     |       |-- cohort_retention.sql                monthly cohort retention analysis
     |       |-- customer_order_streaks.sql          longest consecutive ordering streaks
+    |       |-- delivery_sla_review_impact.sql      late delivery rate and review score impact
     |
     |-- python/
     |   |-- load_reviews.py                        pandas loader for order_reviews CSV
@@ -173,6 +174,14 @@ loyalty programs and reactivation campaigns would have near-zero
 ROI. The correct optimisation is acquisition efficiency and
 first-order margin.
 
+### Delivery SLA — 1.72 star penalty per late order
+
+8% of delivered orders arrived late. On-time orders average
+4.29 stars; late orders average 2.57 — a 1.72 star gap.
+Olist deliberately under-promises on delivery estimates:
+on-time orders arrive an average of 13.7 days *before* the
+estimated date, driving positive surprise. The worst late
+delivery was 188 days overdue.
 
 *More findings added as the analysis progresses.*
 

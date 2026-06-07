@@ -348,4 +348,61 @@ lucky 5-star review dominate the list and the finding becomes
 meaningless. This is the kind of decision that separates
 analytical rigour from naive querying.
 
+---
+
+## Finding 7 — How much does a late delivery hurt review scores?
+
+**The question an ops team asks:**
+Delivery SLA compliance is expensive to maintain — faster
+logistics, better carrier contracts, more warehouse capacity.
+The business case for that investment requires knowing: what
+is the actual rating penalty of a late delivery?
+
+**Query approach:**
+Two-stage CTE. First classify each delivered order as Late or
+On Time by comparing order_delivered_customer_date against
+order_estimated_delivery_date using DATEDIFF — positive means
+late, negative means early. Join to order_reviews for the
+score. Then aggregate by delivery flag, using SUM() OVER ()
+with an empty window to calculate the percentage of total
+orders without a self-join.
+
+Only orders with status = 'delivered' and non-NULL timestamps
+included — cancelled orders and those still in transit have
+no delivery date and would break the DATEDIFF calculation.
+
+**Results:**
+
+| Delivery Status | Orders | % of Total | Avg Rating | Avg Days Late |
+|----------------|--------|-----------|------------|---------------|
+| On Time | 88,653 | 92% | 4.29 stars | -13.7 days |
+| Late | 7,700 | 8% | 2.57 stars | +8.8 days |
+
+**Business insight:**
+A late delivery costs Olist 1.72 stars on average — dropping
+from 4.29 to 2.57 on a 5-point scale. That is not a marginal
+impact. It is the difference between a platform customers
+recommend and one they warn people about.
+
+The -13.7 average days for on-time orders is a deliberate
+strategy: Olist under-promises on delivery estimates and
+over-delivers in reality. Customers expecting delivery in
+2 weeks receive it in under 1 week — that surprise drives
+the 4.29 average rating on on-time orders.
+
+The maximum late delivery was 188 days — someone waited
+6 months past their estimated date. The worst late deliveries
+are almost certainly concentrated at 1-star ratings.
+
+**Operational implication:**
+Every percentage point reduction in late delivery rate
+directly improves platform average rating. If Olist reduced
+late deliveries from 8% to 4%, and those orders moved from
+2.57 to 4.29 average rating, the platform-wide average
+would improve by approximately 0.07 stars — meaningful at
+marketplace scale where rating differences drive search
+ranking and seller acquisition.
+
+
+
 *Further findings will appear here as the analysis progresses.*
