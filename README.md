@@ -99,6 +99,7 @@ silently breaks JOINs if you don't catch it.
     |       |-- category_orders_running_total.sql   running total of orders per category
     |       |-- monthly_revenue_growth.sql          month-over-month revenue growth (LAG)
     |       |-- cohort_retention.sql                monthly cohort retention analysis
+    |       |-- customer_order_streaks.sql          longest consecutive ordering streaks
     |
     |-- python/
     |   |-- load_reviews.py                        pandas loader for order_reviews CSV
@@ -161,6 +162,16 @@ the massive November 2017 Black Friday cohort (7,270 new
 customers) retained just 0.6% the next month. Olist's
 revenue depends entirely on acquiring new customers every
 month — there is no meaningful returning customer base.
+
+### Loyal customers — 0.011% of the base
+
+Only 11 customers out of 99,441 ordered in 3+ consecutive
+months. The single most loyal customer maintained a 7-month
+streak. Combined with Finding 4's cohort retention data, this
+confirms Olist is structurally a one-time-buyer marketplace —
+loyalty programs and reactivation campaigns would have near-zero
+ROI. The correct optimisation is acquisition efficiency and
+first-order margin.
 
 
 *More findings added as the analysis progresses.*

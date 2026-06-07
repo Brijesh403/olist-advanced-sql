@@ -256,4 +256,57 @@ every order appear to come from a new customer — producing
 near-zero retention that's wrong for the wrong reason.
 customer_unique_id is the true person identifier in this
 dataset.
+
+---
+
+## Finding 5 — Who are Olist's most loyal customers?
+
+**The question:**
+Given that Finding 4 showed sub-1% month-1 retention across
+every cohort, are there any customers who genuinely kept coming
+back? And if so, how many, and how loyal are they really?
+
+**Query approach:**
+Five-stage CTE using the gaps and islands technique. First
+deduplicate to one row per customer per active month. Then
+assign a row number per customer ordered by month. The key
+insight: subtracting the row number from the sequential month
+number produces a constant for consecutive months — same
+constant means same streak (island), different constant means
+a gap. Count rows within each island to get streak length,
+then keep each customer's longest streak.
+
+**Results:**
+
+| Customer (hashed) | Streak | Start | End |
+|-------------------|--------|-------|-----|
+| 8d50f5ea... | 7 months | 2017-05 | 2018-08 |
+| 6469f99c... | 5 months | 2017-09 | 2018-06 |
+| 1b6c7548... | 4 months | 2017-11 | 2018-02 |
+| (8 others) | 3 months | various | various |
+
+**Business insight:**
+Only 11 customers out of 99,441 achieved 3 or more consecutive
+months of ordering. That is 0.011% of Olist's customer base.
+
+Combined with Finding 4's sub-1% month-1 retention, these two
+findings tell the same story from different angles: Olist is
+structurally a one-time-buyer marketplace. People purchase a
+specific item — furniture, electronics, home goods — and have
+no reason to return the following month. This is not a product
+failure or a retention execution problem. It is the fundamental
+nature of the category.
+
+The strategic implication: investing in loyalty programs or
+reactivation campaigns would have near-zero ROI. The correct
+optimisation is first-order margin and customer acquisition
+efficiency — how cheaply can you acquire a customer who will
+place one good order?
+
+**Technique note:**
+The gaps and islands trick (row_number subtraction) is one of
+the most elegant patterns in SQL. It works because consecutive
+integers minus consecutive row numbers always produce the same
+constant — the moment a gap appears, the constant shifts.
+
 *Further findings will appear here as the analysis progresses.*
