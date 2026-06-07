@@ -140,19 +140,33 @@ that takes hours to track down if you don't know to look for it.
 
 ### Seller concentration by category
 
-`watches_gifts` top 3 sellers: R$201K / R$192K / R$170K —
+`watches_gifts` top 3 sellers are within 16% of each other —
 tight competition, no single seller has outsized leverage.
+`bed_bath_table` tells a different story: the drop-off to rank 3
+is steep, meaning two sellers dominate and hold significant
+commission negotiation power over the platform.
 
-`bed_bath_table` top 3: R$165K / R$152K / R$55K — the drop-off to
-rank 3 is steep, meaning two sellers dominate this category and
-hold significant commission negotiation power over the platform.
+| Category | Rank 1 | Rank 2 | Rank 3 | Signal |
+|----------|--------|--------|--------|--------|
+| watches_gifts | R$201K | R$192K | R$170K | Healthy — within 16% |
+| health_beauty | R$79K | R$72K | R$66K | Healthy |
+| bed_bath_table | R$165K | R$152K | R$55K | Risk — 3× gap to rank 3 |
+| computers_accessories | R$53K | R$52K | R$47K | Healthy — very tight |
+| sports_leisure | R$54K | R$42K | R$42K | Moderate |
 
 ### City concentration by state
 
 DF (Brasília) shows extreme concentration — 2,131 orders from
-the capital vs just 4 from the next city. SP shows healthier
-distribution across São Paulo (15,540), Campinas (1,444), and
-Guarulhos (1,189) — multiple cities absorbing meaningful demand.
+the capital vs just 4 from the next city. SP shows the healthiest
+distribution with three cities each absorbing meaningful volume.
+
+| State | City #1 | Orders | City #2 | Orders | City #3 | Orders |
+|-------|---------|--------|---------|--------|---------|--------|
+| SP | São Paulo | 15,540 | Campinas | 1,444 | Guarulhos | 1,189 |
+| RJ | Rio de Janeiro | 6,882 | Niterói | 849 | Nova Iguaçu | 442 |
+| MG | Belo Horizonte | 2,773 | Juiz de Fora | 427 | Contagem | 426 |
+| BA | Salvador | 1,245 | Feira de Santana | 185 | Vitória da Conquista | 92 |
+| DF | Brasília | 2,131 | Taguatinga | 4 | Guará | 2 |
 
 ### Olist GMV trajectory
 
@@ -164,73 +178,127 @@ R$9,571 in a single day — marks when the platform meaningfully
 opened to sellers. The 7-day moving average makes this
 acceleration visible where raw daily numbers just look like noise.
 
+| Milestone | Date | Value |
+|-----------|------|-------|
+| First ever order | 2016-09-04 | R$72.89 |
+| Platform inflection (single day) | 2016-10-04 | R$9,571 daily revenue |
+| Black Friday peak (monthly) | 2017-11 | R$1,003,862 |
+| Total GMV (end of dataset) | 2018-09-03 | R$13,496,408 |
+
 ### Revenue growth phases
 
-Three distinct phases: explosive early growth in 2017 (50–100%
-MoM), a Black Friday peak in November 2017 at R$1,003,862
-(+52.1% MoM — the only month to cross R$1M), and a plateau
-from April 2018 onward with single-digit or negative growth
-hovering around R$850K–R$1M monthly.
+Three distinct phases visible in the MoM data: explosive early
+growth in 2017, a Black Friday spike that was never repeated,
+and a plateau that signals market saturation.
+
+| Period | Revenue | MoM Growth | Phase |
+|--------|---------|------------|-------|
+| 2017-03 | R$368K | +50.4% | Explosive growth |
+| 2017-05 | R$503K | +42.2% | Explosive growth |
+| 2017-11 | R$1,003K | +52.1% | Black Friday peak — only month above R$1M |
+| 2017-12 | R$742K | −26.1% | Post-holiday unwind |
+| 2018-04 | R$993K | +1.3% | Plateau begins |
+| 2018-05 | R$992K | −0.1% | Plateau |
 
 ### Customer retention — the one-time buyer problem
 
-Month-1 retention is below 1% across every cohort. Even
-the massive November 2017 Black Friday cohort (7,270 new
-customers) retained just 0.6% the next month. Olist's
-revenue depends entirely on acquiring new customers every
-month — there is no meaningful returning customer base.
+Month-1 retention is below 1% across every single cohort — not
+just one bad month, every month in the dataset. Olist's revenue
+depends entirely on acquiring new customers every month. There
+is no meaningful returning customer base.
+
+| Cohort | Acquired (m0) | Returned (m1) | m1 Retention |
+|--------|--------------|--------------|--------------|
+| 2017-01 | 762 | 3 | 0.4% |
+| 2017-05 | 3,571 | 17 | 0.5% |
+| 2017-08 | 4,162 | 28 | 0.7% |
+| 2017-11 (Black Friday) | 7,270 | 40 | 0.6% |
+| 2018-01 | 6,992 | 23 | 0.3% |
+| 2018-04 | 6,700 | 39 | 0.6% |
 
 ### Loyal customers — 0.011% of the base
 
 Only 11 customers out of 99,441 ordered in 3 or more consecutive
 months. The single most loyal customer maintained a 7-month
-streak. This confirms Olist is structurally a one-time-buyer
-marketplace — loyalty programs and reactivation campaigns would
-have near-zero ROI. The correct optimisation is acquisition
-efficiency and first-order margin.
+streak. Loyalty programs and reactivation campaigns would have
+near-zero ROI at this retention level. The correct optimisation
+is acquisition efficiency and first-order margin.
+
+| Customer (hashed) | Streak | From | To |
+|-------------------|--------|------|----|
+| 8d50f5ea... | 7 months | 2017-05 | 2018-08 |
+| 6469f99c... | 5 months | 2017-09 | 2018-06 |
+| 1b6c7548... | 4 months | 2017-11 | 2018-02 |
+| 8 others | 3 months | various | various |
 
 ### Delivery SLA — 1.72 star penalty per late order
 
-8% of delivered orders arrived late. On-time orders average
-4.29 stars; late orders average 2.57 — a 1.72 star gap.
-Olist deliberately under-promises on delivery estimates:
-on-time orders arrive an average of 13.7 days *before* the
-estimated date, driving positive surprise. The worst late
-delivery was 188 days overdue.
+8% of delivered orders arrived late. Olist deliberately
+under-promises on delivery estimates — on-time orders arrive
+an average of 13.7 days *before* the estimated date, driving
+positive surprise and a strong 4.29 average rating. The worst
+late delivery in the dataset was 188 days overdue.
+
+| Status | Orders | % of Total | Avg Rating | Avg Days vs Estimate |
+|--------|--------|-----------|------------|---------------------|
+| On Time | 88,653 | 92% | 4.29 ⭐ | −13.7 days (early) |
+| Late | 7,700 | 8% | 2.57 ⭐ | +8.8 days (late) |
 
 ### Payment behaviour — regional affordability signal
 
-Credit card dominates nationally (69–84%) but boleto usage
-peaks in Brazil's poorest northern states (AP 29%, RR 29%,
-MA 27%). Installment counts and order values rise together
-in the North/Northeast — PB averages 3.8 installments on
-R$248 orders vs SP's 2.6 installments on R$137. Higher-value
-purchases in lower-income regions are financed across more
-monthly payments to remain affordable.
+Credit card dominates nationally (69–84%) but boleto — the
+payment method of the unbanked — peaks in Brazil's poorest
+northern states. Installment counts and order values rise
+together in the North/Northeast: higher-value purchases in
+lower-income regions are financed across more monthly payments
+to remain affordable.
+
+| State | Orders | Credit Card | Boleto | Avg Installments | Avg Order Value |
+|-------|--------|------------|--------|-----------------|----------------|
+| SP | 41,418 | 77.1% | 19.7% | 2.6 | R$137 |
+| RJ | 12,766 | 80.1% | 16.8% | 3.0 | R$158 |
+| MA | 743 | 71.7% | 27.1% | 3.1 | R$199 |
+| PB | 534 | 80.0% | 17.4% | 3.8 | R$248 |
+| TO | 279 | 70.3% | 27.2% | 3.0 | R$204 |
+| AP | 68 | 69.1% | 29.4% | 2.6 | R$232 |
+| RR | 45 | 71.1% | 28.9% | 2.8 | R$221 |
 
 ### Order value distribution — median R$104, top 10% drive 38% of revenue
 
 Median order value is R$104 — a mid-range household item.
-The top 10% of orders (above R$307) generate 38.1% of total
-revenue; the top 20% generate over 53%. Classic Pareto
-concentration. The maximum single order was R$13,664 —
-nearly 130× the median — which is why average order value
-is a misleading metric for this dataset.
+Classic Pareto concentration at the top. The maximum single
+order was R$13,664 — nearly 130× the median — which is exactly
+why average order value is a misleading headline metric here.
+
+| Percentile | Order Value | Notes |
+|------------|-------------|-------|
+| 25th | R$61 | Bottom quarter |
+| 50th (median) | R$104 | Typical order |
+| 75th | R$175 | Upper half |
+| 90th | R$297 | High-value threshold |
+| Top 10% decile | R$307+ | Generates 38.1% of total revenue |
+| Top 20% decile | R$243+ | Generates 53%+ of total revenue |
+| Maximum | R$13,664 | 130× the median |
 
 ### Capstone — Seller scorecard: revenue vs quality vs delivery
 
 A multi-dimensional seller ranking combining revenue, late
 delivery rate, and avg review score. The headline finding:
-the rank 5 seller by revenue does R$188K but averages just
-3.35 stars — high revenue masking a platform trust risk.
-The best overall performer is rank 2: a BA-based seller with
-R$223K revenue, 4.0% late delivery, and 4.08 stars. 20 of
-the top 30 revenue sellers are in SP, confirming Olist's
-geographic revenue concentration risk.
+rank 5 does R$188K but averages 3.35 stars — high revenue
+masking a platform trust risk. 20 of the top 30 revenue
+sellers are in SP, confirming Olist's geographic concentration.
 
-Four seller segments identified: Star Sellers (rating ≥ 4.0,
-late delivery ≤ 10%), High Revenue Risk (revenue > R$50K,
-rating < 3.5), Quality Risk (rating < 3.0), and Standard.
+Four seller segments: **Star Sellers** (rating ≥ 4.0, late ≤ 10%),
+**High Revenue Risk** (revenue > R$50K, rating < 3.5),
+**Quality Risk** (rating < 3.0), and **Standard**.
+
+| Revenue Rank | State | Revenue | Late % | Avg Rating | Segment |
+|-------------|-------|---------|--------|------------|---------|
+| 1 | SP | R$229K | 11.6% | 4.13 ⭐ | Standard |
+| 2 | BA | R$223K | 4.0% | 4.08 ⭐ | Star Seller ✓ |
+| 3 | SP | R$200K | 11.0% | 3.80 ⭐ | Standard |
+| 4 | SP | R$193K | 10.2% | 4.34 ⭐ | Standard |
+| 5 | SP | R$188K | 9.6% | 3.35 ⭐ | High Revenue Risk ⚠ |
 
 ---
 
