@@ -467,6 +467,70 @@ cost matters more. Voucher usage above 8% in BA and TO
 signals heavy promotional dependency — worth investigating
 whether those orders are margin-positive.
 
+---
+
+## Finding 9 — What does a typical Olist order look like?
+
+**The question a product or pricing team asks:**
+Average order value is distorted by outliers. What does a
+typical order actually cost? Where does the high-value segment
+begin? And how concentrated is revenue across the order
+distribution?
+
+**Query approach:**
+Two queries using NTILE(). First, NTILE(100) assigns each
+order to a percentile bucket ordered by value — the 50th
+percentile bucket gives the median without a native MEDIAN()
+function. Second, NTILE(10) splits orders into deciles ordered
+by value descending, then SUM() OVER () calculates each
+decile's share of total revenue in a single pass.
+
+Order value includes both item price and freight — the true
+cost to the customer, not just the product price.
+
+**Results — percentile distribution:**
+
+| Percentile | Order Value Range | Avg Value |
+|------------|------------------|-----------|
+| 10th | R$38 - R$40 | R$39 |
+| 25th | R$60 - R$62 | R$61 |
+| 50th (median) | R$103 - R$105 | R$104 |
+| 75th | R$173 - R$177 | R$175 |
+| 90th | R$287 - R$307 | R$297 |
+| 99th | R$762 - R$1,056 | R$887 |
+| 100th (max) | up to R$13,664 | R$1,665 |
+
+**Results — revenue concentration by decile:**
+
+| Decile | Avg Order Value | Revenue Share |
+|--------|----------------|---------------|
+| Top 10% | R$611 | 38.1% |
+| 11-20% | R$243 | 15.2% |
+| 21-30% | R$178 | 11.1% |
+| Bottom 10% | R$31 | 2.0% |
+
+**Business insights:**
+The median order on Olist is R$104 — a mid-range household
+item, not a luxury purchase. Half of all orders fall below
+this value, confirming Olist serves a mass-market, everyday
+consumer rather than a premium buyer.
+
+The top 10% of orders (above R$307) generate 38.1% of total
+revenue. The top 20% generate over 53%. This is classic
+Pareto concentration — the business depends heavily on a
+small number of high-value orders to sustain GMV.
+
+The maximum single order was R$13,664 — nearly 130x the
+median. This kind of outlier inflates average order value
+significantly, which is why median is the more honest metric
+for communicating typical customer behaviour.
+
+**Pricing and promotion implication:**
+Free shipping thresholds, loyalty perks, and upsell prompts
+should target the R$100-300 range — where the highest density
+of orders sits and where a small nudge (add one more item)
+moves customers meaningfully up the value distribution.
+
 
 
 *Further findings will appear here as the analysis progresses.*

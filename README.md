@@ -101,7 +101,8 @@ silently breaks JOINs if you don't catch it.
     |       |-- cohort_retention.sql                monthly cohort retention analysis
     |       |-- customer_order_streaks.sql          longest consecutive ordering streaks
     |       |-- delivery_sla_review_impact.sql      late delivery rate and review score impact
-    |       |-- payment_behaviour_by_state.sql      payment method and installment mix by state
+    |       |-- payment_behaviour_by_state.sql      payment method and installment mix by state 
+    |       |-- order_value_percentiles.sql         order value percentiles and revenue concentration
     |
     |-- python/
     |   |-- load_reviews.py                        pandas loader for order_reviews CSV
@@ -194,6 +195,14 @@ R$248 orders vs SP's 2.6 installments on R$137. Higher-value
 purchases in lower-income regions are financed across more
 monthly payments to remain affordable.
 
+### Order value distribution — median R$104, top 10% drive 38% of revenue
+
+Median order value is R$104 — a mid-range household item.
+The top 10% of orders (above R$307) generate 38.1% of total
+revenue; the top 20% generate over 53%. Classic Pareto
+concentration. The maximum single order was R$13,664 —
+nearly 130x the median — which is why average order value
+is a misleading metric for this dataset.
 
 *More findings added as the analysis progresses.*
 
