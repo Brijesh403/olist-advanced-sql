@@ -101,6 +101,7 @@ silently breaks JOINs if you don't catch it.
     |       |-- cohort_retention.sql                monthly cohort retention analysis
     |       |-- customer_order_streaks.sql          longest consecutive ordering streaks
     |       |-- delivery_sla_review_impact.sql      late delivery rate and review score impact
+    |       |-- payment_behaviour_by_state.sql      payment method and installment mix by state
     |
     |-- python/
     |   |-- load_reviews.py                        pandas loader for order_reviews CSV
@@ -182,6 +183,17 @@ Olist deliberately under-promises on delivery estimates:
 on-time orders arrive an average of 13.7 days *before* the
 estimated date, driving positive surprise. The worst late
 delivery was 188 days overdue.
+
+### Payment behaviour — regional affordability signal
+
+Credit card dominates nationally (69-84%) but boleto usage
+peaks in Brazil's poorest northern states (AP 29%, RR 29%,
+MA 27%). Installment counts and order values rise together
+in the North/Northeast — PB averages 3.8 installments on
+R$248 orders vs SP's 2.6 installments on R$137. Higher-value
+purchases in lower-income regions are financed across more
+monthly payments to remain affordable.
+
 
 *More findings added as the analysis progresses.*
 

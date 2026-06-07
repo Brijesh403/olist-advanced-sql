@@ -403,6 +403,70 @@ would improve by approximately 0.07 stars — meaningful at
 marketplace scale where rating differences drive search
 ranking and seller acquisition.
 
+---
+
+## Finding 8 — How does payment behaviour vary across Brazilian states?
+
+**The question a finance or growth team asks:**
+Which payment methods dominate in each region, and where are
+customers most dependent on installment financing? This informs
+payment processor negotiations, regional promotion strategy,
+and product pricing decisions.
+
+**Query approach:**
+Two-stage CTE. First join orders, customers, and payments to
+get one row per order with state and payment details. Then
+pivot payment types into columns using conditional aggregation
+(SUM CASE WHEN payment_type = X THEN 1 ELSE 0 END) and
+calculate percentages against total orders.
+
+Note: percentages do not sum to exactly 100% because one order
+can have multiple payment rows (split payments — part credit
+card, part voucher). This is correct behaviour reflecting the
+data model, not a calculation error.
+
+**Results (selected states):**
+
+| State | Orders | Credit Card | Boleto | Avg Installments | Avg Order Value |
+|-------|--------|------------|--------|-----------------|----------------|
+| SP | 41,418 | 77.1% | 19.7% | 2.6 | R$137 |
+| RJ | 12,766 | 80.1% | 16.8% | 3.0 | R$158 |
+| CE | 1,329 | 82.0% | 15.2% | 3.5 | R$199 |
+| AL | 412 | 82.5% | 16.5% | 3.7 | R$226 |
+| AP | 68 | 69.1% | 29.4% | 2.6 | R$232 |
+| MA | 743 | 71.7% | 27.1% | 3.1 | R$199 |
+
+**Business insights:**
+
+Credit card dominates everywhere (69-84%) but the pattern
+across regions is counterintuitive — northern and northeastern
+states show higher credit card completion rates than SP. The
+likely explanation: in lower-income regions, boleto orders
+have higher abandonment (customers initiate but don't pay),
+so completed orders skew toward card users who convert.
+
+Boleto usage is highest in Brazil's poorest states — AP
+(29.4%), RR (28.9%), TO (27.2%), MA (27.1%). Boleto is the
+payment method of the unbanked: no credit card required, pay
+at any bank or lottery shop. High boleto % signals a
+lower-income, price-sensitive market that Olist reaches
+through affordability, not aspiration.
+
+Installment counts and order values move together in the
+North/Northeast. PB (Paraíba) averages 3.8 installments on
+R$248 orders; SP averages 2.6 installments on R$137 orders.
+Higher-value purchases in lower-income regions require more
+installments to be affordable — the same product, spread
+across more monthly payments.
+
+**Operational implication:**
+A payment processor negotiation strategy should differentiate
+by region: in SP and RJ, optimise for credit card transaction
+fees (highest volume). In MA, TO, and AP, boleto processing
+cost matters more. Voucher usage above 8% in BA and TO
+signals heavy promotional dependency — worth investigating
+whether those orders are margin-positive.
+
 
 
 *Further findings will appear here as the analysis progresses.*
