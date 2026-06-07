@@ -1,173 +1,241 @@
-# Olist E-Commerce — SQL Product Analytics
+# Olist E-Commerce — Advanced SQL Business Case Study
 
-**12 business questions. 12 SQL analyses. Every answer backed by real data.**
+A business case study built on the Olist Brazilian E-Commerce
+dataset — 8 relational tables, 100K+ orders, real data with
+real messiness. Each query answers a specific business question:
+seller concentration risk, cohort retention, revenue trajectory,
+delivery SLA impact on reviews.
 
-Brazil's largest e-commerce dataset — 8 tables, 530K rows, real messiness. This is not a tutorial project. The data has embedded newlines in review text, Portuguese category names that silently break JOINs, and NULL timestamps across cancelled orders. The queries answer questions a product, growth, or ops team would actually bring to an analyst.
+The dataset has embedded newlines in review text, Portuguese
+category names requiring translation joins, and NULL delivery
+timestamps for cancelled orders — the kind of data quality
+issues that don't exist in tutorial datasets but show up in
+every production database.
 
-**Stack:** MySQL 8.0 · Python (pandas, SQLAlchemy)  
-**Dataset:** [Olist Brazilian E-Commerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
-
----
-
-## What the data revealed
-
-These are not observations. These are findings that would go straight into a product review.
-
----
-
-### "7,270 customers acquired on Black Friday. 40 came back the next month."
-
-Month-1 retention sits below **1% across every single cohort** in the dataset — not just one bad month, every month. The November 2017 Black Friday cohort is the starkest example: 7,270 new customers, **40 returned** (0.6%). Digging further with a gaps-and-islands streak analysis: **only 11 customers out of 99,441** ever ordered in 3 or more consecutive months. That's 0.011% of the base.
-
-The strategic implication is clear: Olist is structurally a one-time-buyer marketplace. Loyalty programs and reactivation campaigns would have near-zero ROI. The correct optimization is first-order margin and acquisition cost — not retention.
-
-*Techniques: 5-stage CTE cohort retention pivot, PERIOD_DIFF, Gaps & Islands (row_number subtraction)*
+**Stack:** MySQL 8.0 · Python (pandas, SQLAlchemy)
 
 ---
 
-### "A late delivery costs exactly 1.72 stars."
+## What I built
 
-8% of delivered orders arrived late. On-time orders average **4.29 stars**. Late orders average **2.57 stars** — a gap of **1.72 stars** on a 5-point scale. That is the difference between a platform customers recommend and one they warn people about.
+13 advanced SQL analyses across three business domains:
 
-The more interesting finding: on-time orders arrive an average of **13.7 days before** the estimated date. Olist deliberately under-promises on delivery estimates. The strategy works — customers expecting delivery in 2 weeks receive it in under 1 week, and that surprise drives the 4.29 average. The worst late delivery in the dataset was **188 days** overdue.
+**Seller Performance**
 
-*Techniques: DATEDIFF, CASE WHEN classification, SUM() OVER () for % share without self-join*
+- Top 3 sellers by revenue per product category — and what the
+  revenue gap between rank 1 and rank 3 tells you about category
+  concentration risk
+- Sellers outperforming their state's average rating
+- Seller scorecard (capstone) — multi-dimensional ranking combining
+  revenue, late delivery rate, and average review score
 
----
+**Customer Behaviour**
 
-### "The rank-5 seller looks like a success story. It isn't."
+- Monthly cohort retention in pure SQL — no Python, no pivoting outside the DB
+- Customers with the longest consecutive ordering streaks (gaps & islands)
+- City and state-level order volume distribution
 
-Revenue rank 5: **R$188K**. Average review score: **3.35 stars**. A single-metric revenue view would flag this seller for a bonus. A multi-dimensional scorecard flags them for a customer trust intervention.
+**Revenue & Operations**
 
-Rank 1 (R$229K, 4.13 stars, 11.6% late) is Standard — high revenue but misses Star Seller on delivery. The genuinely best seller is rank 2: a **BA-based seller** with R$223K revenue, **4.0% late delivery**, and **4.08 stars** — lower volume, higher quality, better platform citizen.
-
-**20 of the top 30 revenue sellers are in SP.** Olist's revenue base is geographically concentrated — a meaningful risk if a competitor targets SP sellers specifically.
-
-*Techniques: 4-stage parallel CTEs, RANK() across 3 dimensions simultaneously, NTILE(4), CASE WHEN segmentation*
-
----
-
-### "R$13.5M GMV in 24 months — and it plateaued."
-
-First ever order: **R$72.89** on September 4, 2016. By September 2018: **R$13,496,408** in cumulative GMV. Three distinct phases are visible in the month-over-month data:
-
-- **Early 2017:** Explosive growth, 50–100% MoM, platform scaling from near-zero
-- **November 2017:** Black Friday pushed Olist past **R$1,003,862** (+52.1%) — the only month in the entire dataset to cross R$1M
-- **April 2018 onward:** Plateau. Single-digit and negative MoM growth around R$850K–R$1M. A signal that current market penetration may be saturating.
-
-The October 2016 inflection — daily revenue jumping from R$441 to R$9,571 in a single day — pinpoints when the platform meaningfully opened to sellers.
-
-*Techniques: LAG() for MoM growth, SUM() OVER with ROWS BETWEEN UNBOUNDED PRECEDING for cumulative GMV, 7-day moving average with ROWS BETWEEN 6 PRECEDING*
+- Cumulative GMV + rolling 7-day revenue trend
+- Month-over-month revenue growth using LAG()
+- Month-over-month order count growth per category
+- Running total of orders per category using PARTITION BY
+- Late delivery rate and its measurable impact on review scores
+- Payment method and installment behaviour by region
+- Order value percentiles and revenue concentration by decile
 
 ---
 
-### "The top 10% of orders generate 38% of revenue. The median is R$104."
+## SQL techniques demonstrated
 
-Half of all Olist orders are below **R$104** — a mid-range household item, not a luxury purchase. The distribution is classic Pareto: top 10% of orders (above R$307) generate **38.1%** of total revenue. Top 20% generate over 53%.
-
-The maximum single order was **R$13,664** — nearly 130× the median. This is exactly why average order value is a misleading headline metric. It hides the mass-market base that actually drives volume.
-
-*Techniques: NTILE(100) for percentile buckets, NTILE(10) for decile revenue share, SUM() OVER () for running revenue %*
-
----
-
-### "bed_bath_table has a seller concentration problem. watches_gifts doesn't."
-
-In the top 5 revenue categories, two tell very different stories about platform risk:
-
-| Category | Rank 1 | Rank 2 | Rank 3 | Signal |
-|----------|--------|--------|--------|--------|
-| watches_gifts | R$201K | R$192K | R$170K | Healthy — top 3 within 16% |
-| bed_bath_table | R$165K | R$152K | R$55K | Risk — ranks 1 & 2 earn 3× rank 3 |
-
-In `bed_bath_table`, losing either of the top two sellers would devastate category revenue. In `watches_gifts`, no single seller has outsized leverage — healthy competition. A category manager uses this to prioritize retention incentives before contract renewal.
-
-*Techniques: ROW_NUMBER() PARTITION BY, 3-stage CTE pattern, top-N per group*
-
----
-
-### "Boleto usage in AP is 29.4%. In SP it's 19.7%. That's not a payment preference — it's an affordability signal."
-
-Credit card dominates nationally (69–84%) but boleto — the payment method of the unbanked, payable at any lottery shop — peaks in Brazil's poorest northern states: **AP 29.4%, RR 28.9%, TO 27.2%, MA 27.1%**.
-
-The installment pattern confirms it: PB (Paraíba) averages **3.8 installments on R$248 orders**. SP averages **2.6 installments on R$137 orders**. Higher-value purchases in lower-income regions require more monthly payments to remain affordable. Payment processor negotiations, regional promotions, and pricing strategy all look different when you see this breakdown by state.
-
-*Techniques: Conditional aggregation pivot (SUM CASE WHEN), percentage calculation across 17 states*
-
----
-
-## SQL Techniques
-
-| Technique | What it achieved |
+| Technique | Where it's used |
 |-----------|----------------|
-| `ROW_NUMBER()` with `PARTITION BY` | Top-N sellers per category; top cities per state — independent leaderboards per group |
-| `LAG()` with `PARTITION BY` | MoM revenue growth; category-level order volume trends |
-| `ROWS BETWEEN` window frames | Cumulative GMV from first order; 7-day smoothed revenue trend |
-| 5-stage CTE cohort logic | Full monthly retention pivot — cohort size → month offset → active count → % |
-| Gaps & Islands | Subtracting row_number from month_number to identify consecutive-ordering streaks |
-| `AVG() OVER PARTITION BY` | State-level seller benchmark — one pass, no self-join |
-| `NTILE(100)` and `NTILE(10)` | Percentile distribution and decile revenue concentration |
-| Conditional aggregation pivot | Payment method mix across 17 states in a single query |
-| Parallel CTEs + `RANK()` + `CASE WHEN` | Capstone scorecard — revenue, delivery, and quality ranked simultaneously |
-| `DATEDIFF` + NULL filtering | Delivery SLA compliance — excluding cancelled and in-transit orders cleanly |
+| `ROW_NUMBER()` with `PARTITION BY` | Top-N sellers per category; top cities per state |
+| `LAG()` with `PARTITION BY` | MoM revenue growth; MoM order growth per category |
+| `ROWS BETWEEN` window frames | Cumulative GMV; 7-day moving average |
+| 5-stage CTE cohort logic | Monthly retention pivot — cohort → offset → active count → % |
+| Gaps & Islands | Row_number subtraction to detect consecutive ordering streaks |
+| `AVG() OVER PARTITION BY` | State-level seller benchmark comparisons |
+| `NTILE(100)` and `NTILE(10)` | Order value percentiles and decile revenue share |
+| Conditional aggregation pivot | Payment method mix across 17 states |
+| Multi-CTE + `RANK()` + `CASE WHEN` | Capstone scorecard — 3 dimensions ranked simultaneously |
+| `DATEDIFF` + NULL handling | Delivery SLA compliance — late vs on-time classification |
 
 ---
 
-## The Dataset
+## The dataset
 
-8 relational tables, ~530K rows. This is real production data with real data quality issues.
+**Source:** [Brazilian E-Commerce Public Dataset — Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
+
+**Database:** MySQL 8.0
+
+**Scale:** 8 tables, ~530K rows total across all tables
 
 | Table | Rows | What it contains |
 |-------|------|-----------------|
-| orders | 99,441 | Order spine — status + 5 timestamps from purchase to delivery |
-| order_items | 112,650 | Line items — price, freight, seller |
-| order_payments | 103,886 | Payment type, installment count, value |
-| order_reviews | 99,224 | 1–5 star scores + free-text comments |
+| orders | 99,441 | The spine — status + 5 timestamps from purchase to delivery |
+| order_items | 112,650 | Line items — price, freight, which seller fulfilled it |
+| order_payments | 103,886 | Payment type, installments, value |
+| order_reviews | 99,224 | 1–5 scores + free-text comments |
 | customers | 99,441 | City, state — no PII |
 | products | 32,951 | Category, physical dimensions |
 | sellers | 3,095 | City, state |
-| category_translation | 71 | Portuguese → English category names |
+| category_translation | 71 | Portuguese to English category names |
 
 ---
 
-## Data Quality Challenges Encountered
+## Setup notes
 
-**The reviews CSV breaks bulk loading.**  
-`LOAD DATA INFILE` fails at row 77,917. Customer review text contains embedded newlines and improperly escaped quotes — MySQL's line parser can't handle them. Fix: pandas, which parses multi-line quoted fields natively. See `python/load_reviews.py`. This is the kind of issue that stops a junior analyst cold. Knowing *why* it fails and how to route around it is the actual skill.
+Two real data quality issues worth documenting:
 
-**Carriage return characters silently breaking every JOIN.**  
-Windows CRLF line endings in `product_category_name_translation.csv` left `\r` on the end of every English category name. Every JOIN on that column returned zero matches — no error, just missing data. Fix: `UPDATE ... SET product_category_name_english = REPLACE(product_category_name_english, '\r', '')`. Caught by noticing that category translation joins were returning NULL for every product.
+**1. The reviews CSV breaks bulk loading.**
+
+`LOAD DATA INFILE` fails at row 77,917 because customer review
+text contains embedded newlines and imperfectly escaped quotes.
+MySQL's line parser trips on them. The fix is pandas — a proper
+CSV parser that handles multi-line quoted fields. The other 7
+tables load fine via bulk load. See `python/load_reviews.py`.
+
+**2. Category names loaded with trailing carriage return characters.**
+
+Windows CRLF line endings in `product_category_name_translation.csv`
+left carriage returns on every English category name — silently
+breaking every JOIN on that column with no error, just missing data.
+A single UPDATE with REPLACE() cleaned it. Small bug, but the kind
+that takes hours to track down if you don't know to look for it.
 
 ---
 
-## Repo Structure
+## Repo structure
 
     olist-advanced-sql/
     ├── sql/
     │   ├── 01_setup/
-    │   │   ├── 01_create_tables.sql               schema + foreign keys, 8 tables
-    │   │   └── 02_load_data.sql                   bulk load + reviews workaround note
+    │   │   ├── 01_create_tables.sql               schema + foreign keys for 8 tables
+    │   │   └── 02_load_data.sql                   bulk load 7 tables + notes on reviews
     │   └── 02_findings/
     │       ├── top_sellers_by_category.sql         top-N sellers per category
     │       ├── top_cities_by_state.sql             top-3 cities per state
-    │       ├── revenue_running_total.sql           cumulative GMV + 7-day moving avg
-    │       ├── category_orders_running_total.sql   per-category running totals
-    │       ├── monthly_revenue_growth.sql          MoM revenue growth
-    │       ├── category_mom_order_growth.sql       MoM order count per category
-    │       ├── cohort_retention.sql                monthly cohort retention pivot
-    │       ├── customer_order_streaks.sql          consecutive ordering streaks
-    │       ├── sellers_above_state_avg_rating.sql  state-level benchmark comparison
-    │       ├── delivery_sla_review_impact.sql      SLA compliance + review impact
-    │       ├── payment_behaviour_by_state.sql      payment mix across 17 states
-    │       ├── order_value_percentiles.sql         percentile + decile distribution
-    │       └── seller_scorecard.sql                capstone — multi-dimensional ranking
+    │       ├── revenue_running_total.sql           rolling GMV + 7-day moving avg
+    │       ├── category_orders_running_total.sql   running total of orders per category
+    │       ├── monthly_revenue_growth.sql          month-over-month revenue growth (LAG)
+    │       ├── category_mom_order_growth.sql       month-over-month order count per category
+    │       ├── cohort_retention.sql                monthly cohort retention analysis
+    │       ├── customer_order_streaks.sql          longest consecutive ordering streaks
+    │       ├── sellers_above_state_avg_rating.sql  sellers outperforming state average
+    │       ├── delivery_sla_review_impact.sql      late delivery rate and review score impact
+    │       ├── payment_behaviour_by_state.sql      payment method and installment mix by state
+    │       ├── order_value_percentiles.sql         order value percentiles and revenue concentration
+    │       └── seller_scorecard.sql                capstone — seller revenue, quality and delivery
     ├── python/
     │   └── load_reviews.py                        pandas loader for order_reviews CSV
     ├── docs/
-    │   └── business_case.md                       full findings + SQL approach + business insight
+    │   └── business_case.md                       findings + business interpretation
     └── data/                                      not tracked — download from Kaggle
 
 ---
 
-**Brijesh Vaghela** · [LinkedIn](https://www.linkedin.com/in/brijesh-vaghela) · [GitHub](https://github.com/Brijesh403)  
+## Key findings
+
+### Seller concentration by category
+
+`watches_gifts` top 3 sellers: R$201K / R$192K / R$170K —
+tight competition, no single seller has outsized leverage.
+
+`bed_bath_table` top 3: R$165K / R$152K / R$55K — the drop-off to
+rank 3 is steep, meaning two sellers dominate this category and
+hold significant commission negotiation power over the platform.
+
+### City concentration by state
+
+DF (Brasília) shows extreme concentration — 2,131 orders from
+the capital vs just 4 from the next city. SP shows healthier
+distribution across São Paulo (15,540), Campinas (1,444), and
+Guarulhos (1,189) — multiple cities absorbing meaningful demand.
+
+### Olist GMV trajectory
+
+First ever order: R$72.89 on September 4, 2016.
+Total GMV across the dataset: R$13,496,408 by September 2018.
+
+The October 2016 inflection — revenue jumping from R$441 to
+R$9,571 in a single day — marks when the platform meaningfully
+opened to sellers. The 7-day moving average makes this
+acceleration visible where raw daily numbers just look like noise.
+
+### Revenue growth phases
+
+Three distinct phases: explosive early growth in 2017 (50–100%
+MoM), a Black Friday peak in November 2017 at R$1,003,862
+(+52.1% MoM — the only month to cross R$1M), and a plateau
+from April 2018 onward with single-digit or negative growth
+hovering around R$850K–R$1M monthly.
+
+### Customer retention — the one-time buyer problem
+
+Month-1 retention is below 1% across every cohort. Even
+the massive November 2017 Black Friday cohort (7,270 new
+customers) retained just 0.6% the next month. Olist's
+revenue depends entirely on acquiring new customers every
+month — there is no meaningful returning customer base.
+
+### Loyal customers — 0.011% of the base
+
+Only 11 customers out of 99,441 ordered in 3 or more consecutive
+months. The single most loyal customer maintained a 7-month
+streak. This confirms Olist is structurally a one-time-buyer
+marketplace — loyalty programs and reactivation campaigns would
+have near-zero ROI. The correct optimisation is acquisition
+efficiency and first-order margin.
+
+### Delivery SLA — 1.72 star penalty per late order
+
+8% of delivered orders arrived late. On-time orders average
+4.29 stars; late orders average 2.57 — a 1.72 star gap.
+Olist deliberately under-promises on delivery estimates:
+on-time orders arrive an average of 13.7 days *before* the
+estimated date, driving positive surprise. The worst late
+delivery was 188 days overdue.
+
+### Payment behaviour — regional affordability signal
+
+Credit card dominates nationally (69–84%) but boleto usage
+peaks in Brazil's poorest northern states (AP 29%, RR 29%,
+MA 27%). Installment counts and order values rise together
+in the North/Northeast — PB averages 3.8 installments on
+R$248 orders vs SP's 2.6 installments on R$137. Higher-value
+purchases in lower-income regions are financed across more
+monthly payments to remain affordable.
+
+### Order value distribution — median R$104, top 10% drive 38% of revenue
+
+Median order value is R$104 — a mid-range household item.
+The top 10% of orders (above R$307) generate 38.1% of total
+revenue; the top 20% generate over 53%. Classic Pareto
+concentration. The maximum single order was R$13,664 —
+nearly 130× the median — which is why average order value
+is a misleading metric for this dataset.
+
+### Capstone — Seller scorecard: revenue vs quality vs delivery
+
+A multi-dimensional seller ranking combining revenue, late
+delivery rate, and avg review score. The headline finding:
+the rank 5 seller by revenue does R$188K but averages just
+3.35 stars — high revenue masking a platform trust risk.
+The best overall performer is rank 2: a BA-based seller with
+R$223K revenue, 4.0% late delivery, and 4.08 stars. 20 of
+the top 30 revenue sellers are in SP, confirming Olist's
+geographic revenue concentration risk.
+
+Four seller segments identified: Star Sellers (rating ≥ 4.0,
+late delivery ≤ 10%), High Revenue Risk (revenue > R$50K,
+rating < 3.5), Quality Risk (rating < 3.0), and Standard.
+
+---
+
+**Brijesh Vaghela**
+
+[LinkedIn](https://www.linkedin.com/in/brijesh-vaghela) ·
+[GitHub](https://github.com/Brijesh403) ·
 See also: [ShopSense Product Analytics](https://github.com/Brijesh403/shopsense-product-analytics)
