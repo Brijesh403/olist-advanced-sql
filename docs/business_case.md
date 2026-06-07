@@ -531,6 +531,63 @@ should target the R$100-300 range — where the highest density
 of orders sits and where a small nudge (add one more item)
 moves customers meaningfully up the value distribution.
 
+---
 
+## Finding 10 (Capstone) — The Complete Seller Scorecard
 
-*Further findings will appear here as the analysis progresses.*
+**The question a seller success team asks every week:**
+Which sellers are genuinely performing across all dimensions —
+revenue, delivery reliability, and customer satisfaction?
+And critically: which high-revenue sellers are quietly
+destroying platform trust with poor ratings and late deliveries?
+
+**Query approach:**
+Four-stage CTE combining five tables. Three parallel CTEs
+compute revenue, delivery performance, and review quality
+independently per seller. A fourth CTE joins all three,
+applies minimum order thresholds, adds RANK() across all
+three dimensions simultaneously, NTILE(4) for revenue
+quartile, and a CASE WHEN classification into four business
+segments. Everything learned in Findings 1-9 is used here.
+
+**Seller segments defined:**
+- **Star Seller:** avg rating ≥ 4.0 AND late delivery ≤ 10%
+- **High Revenue Risk:** revenue > R$50K AND avg rating < 3.5
+- **Quality Risk:** avg rating < 3.0
+- **Standard:** all others
+
+**Key findings from top 30 sellers:**
+
+| Insight | Detail |
+|---------|--------|
+| Rank 1 by revenue | R$229K, 11.6% late, 4.13 stars — Standard, not Star |
+| Rank 5 — High Revenue Risk | R$187K revenue, 3.35 stars — volume masking quality failure |
+| Best overall (rank 2) | BA seller, 4% late, 4.08 stars — Star Seller |
+| Geographic concentration | 23 of top 30 revenue sellers are in SP |
+
+**Business insight:**
+The most important finding in the scorecard is rank 5 —
+a seller doing R$187K in revenue with a 3.35 average rating.
+Without a multi-dimensional view, this seller looks like a
+success story. With it, they're a platform risk. High revenue
+gives sellers negotiating leverage; poor quality costs the
+platform in customer trust and repeat purchase rates.
+
+The BA Star Seller at rank 2 is the counter-example: 358
+orders, 4% late delivery, 4.08 rating. Lower volume, higher
+quality, better platform citizen. A marketplace's seller
+success strategy needs both — protect the high-revenue sellers
+while elevating the high-quality ones.
+
+23 of the top 30 revenue sellers are in SP. Olist's revenue
+base is geographically concentrated — a risk if SP market
+conditions change or a competitor targets SP sellers
+specifically.
+
+**This capstone demonstrates:**
+Multi-table joins across 5 tables, three parallel CTEs,
+simultaneous ranking across multiple dimensions, NTILE()
+for quartile segmentation, conditional business logic via
+CASE WHEN, and minimum threshold filtering for analytical
+reliability — all in service of a single business decision
+framework.

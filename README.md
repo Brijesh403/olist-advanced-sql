@@ -103,6 +103,7 @@ silently breaks JOINs if you don't catch it.
     |       |-- delivery_sla_review_impact.sql      late delivery rate and review score impact
     |       |-- payment_behaviour_by_state.sql      payment method and installment mix by state 
     |       |-- order_value_percentiles.sql         order value percentiles and revenue concentration
+    |       |-- seller_scorecard.sql                capstone — seller revenue, quality and delivery scorecard
     |
     |-- python/
     |   |-- load_reviews.py                        pandas loader for order_reviews CSV
@@ -204,7 +205,18 @@ concentration. The maximum single order was R$13,664 —
 nearly 130x the median — which is why average order value
 is a misleading metric for this dataset.
 
-*More findings added as the analysis progresses.*
+### Capstone — Seller scorecard: revenue vs quality vs delivery
+
+A multi-dimensional seller ranking combining revenue, late
+delivery rate, and avg review score. The headline finding:
+the rank 5 seller by revenue does R$187K but averages just
+3.35 stars — high revenue masking a platform trust risk.
+23 of the top 30 revenue sellers are in SP, confirming
+Olist's geographic revenue concentration risk.
+
+Four seller segments identified: Star Sellers (rating ≥ 4.0,
+late delivery ≤ 10%), High Revenue Risk (revenue > R$50K,
+rating < 3.5), Quality Risk (rating < 3.0), and Standard.
 
 ---
 
