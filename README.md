@@ -1,53 +1,99 @@
-# Olist E-Commerce — Advanced SQL Business Case Study
+# 🛒 Olist E-Commerce — Advanced SQL Business Case Study
+![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
+![SQL](https://img.shields.io/badge/SQL-MySQL%208.0-blue)
+![Python](https://img.shields.io/badge/Python-Pandas%20%7C%20SQLAlchemy-yellow)
+![Analyses](https://img.shields.io/badge/Analyses-13-orange)
+![Rows](https://img.shields.io/badge/Data-530K%20Rows-red)
 
-A business case study built on the Olist Brazilian E-Commerce
-dataset — 8 relational tables, 100K+ orders, real data with
-real messiness. Each query answers a specific business question:
-seller concentration risk, cohort retention, revenue trajectory,
-delivery SLA impact on reviews.
+## 📌 Business Context
 
-The dataset has embedded newlines in review text, Portuguese
-category names requiring translation joins, and NULL delivery
-timestamps for cancelled orders — the kind of data quality
-issues that don't exist in tutorial datasets but show up in
-every production database.
+Olist is Brazil's largest e-commerce marketplace — a platform connecting 3,095 sellers
+to customers across 27 states. As a Data Analyst, I used this public dataset to answer
+the questions a marketplace analytics team deals with every week: which sellers drive
+the most revenue and carry the most platform risk, whether Olist has a retention problem
+or an acquisition problem, and how operational quality (delivery SLA) translates into
+the metric every marketplace ultimately cares about — review scores. *(All revenue
+figures are in BRL.)*
 
-**Stack:** MySQL 8.0 · Python (pandas, SQLAlchemy)
+The dataset has embedded newlines in review text, Portuguese category names requiring
+translation joins, and NULL delivery timestamps for cancelled orders — the kind of data
+quality issues that don't exist in tutorial datasets but show up in every production database.
 
----
+## ❓ Business Questions Answered
 
-## What I built
+1. Which sellers dominate each product category — and what does the revenue gap between rank 1 and rank 3 signal?
+2. Where does demand actually live — which cities and states drive order volume?
+3. How did Olist grow from its first order to R$13.5M GMV, and what phases shaped that growth?
+4. Is there a meaningful returning customer base, or is Olist structurally dependent on new acquisition?
+5. What is the true cost of a late delivery — measured in review stars?
+6. How do payment preferences and order values vary across income regions?
+7. Where is order value concentrated — what does a typical Olist order actually look like?
+8. Which sellers balance revenue, delivery quality, and customer satisfaction simultaneously?
 
-13 advanced SQL analyses across three business domains:
+## 🔑 Key Findings (TL;DR)
 
-**Seller Performance**
+> Full write-up with query rationale in [`docs/business_case.md`](docs/business_case.md).
 
-- Top 3 sellers by revenue per product category — and what the
-  revenue gap between rank 1 and rank 3 tells you about category
-  concentration risk
-- Sellers outperforming their state's average rating
-- Seller scorecard (capstone) — multi-dimensional ranking combining
-  revenue, late delivery rate, and average review score
+- **Olist has a retention problem, not an acquisition problem.** Month-1 retention is below **1% across every cohort** — including the Black Friday 2017 cohort of 7,270 new customers (retained just **0.6%**). Only **11 of 99,441 customers** ordered in 3+ consecutive months.
+- **Category concentration risk in bed_bath_table.** Top 2 sellers earn nearly **3× what rank 3 earns** (R$165K / R$152K vs R$55K), giving those two sellers significant commission negotiation leverage over the platform.
+- **Late delivery costs exactly 1.72 stars.** On-time orders average **4.29 ⭐**; late orders average **2.57 ⭐**. Olist's strategy of under-promising estimates (on-time orders arrive **13.7 days early**) is the reason their baseline rating is high.
+- **Revenue peaked once and never recovered.** Black Friday 2017 hit **R$1,003,862** (+52.1% MoM) — the only month above R$1M. The platform plateaued from April 2018 at R$850K–R$1M with near-zero growth.
+- **Top 10% of orders generate 38% of revenue.** Median order is R$104 but the distribution has a R$13,664 tail — making average order value a misleading headline metric.
+- **Geographic concentration risk.** 20 of the top 30 revenue sellers are in SP. One BA seller (rank 2) outperforms all SP sellers on quality: R$223K revenue, 4.0% late rate, 4.08 ⭐.
+- **The North/Northeast affordability signal.** Boleto (payment for the unbanked) peaks in AP (29%) and RR (29%). PB averages 3.8 installments on R$248 orders vs SP's 2.6 installments on R$137 — higher-value purchases financed in smaller payments.
 
-**Customer Behaviour**
+**Scale:** 8 tables · 99,441 orders · ~530K rows · R$13.5M GMV · Sep 2016 – Sep 2018
 
-- Monthly cohort retention in pure SQL — no Python, no pivoting outside the DB
-- Customers with the longest consecutive ordering streaks (gaps & islands)
-- City and state-level order volume distribution
+| Recommendation | Based On | Expected Action |
+|----------------|----------|-----------------|
+| Stop investing in loyalty — maximise first-order margin | Sub-1% m1 retention across all cohorts | Reallocate retention budget to acquisition |
+| Diversify bed_bath_table seller base | 2 sellers earning 3× rank 3 | Onboard 2–3 new sellers to reduce negotiation risk |
+| Fast-track exit for High Revenue Risk sellers | Rank 5: R$188K but 3.35 ⭐ | Protect platform NPS before it shows in aggregate |
+| Maintain deliberate delivery under-promise policy | On-time orders arrive 13.7 days early → 4.29 ⭐ | Do not adjust estimates — this is a zero-cost rating driver |
 
-**Revenue & Operations**
+## 🛠️ Tools & Technologies
 
-- Cumulative GMV + rolling 7-day revenue trend
-- Month-over-month revenue growth using LAG()
-- Month-over-month order count growth per category
-- Running total of orders per category using PARTITION BY
-- Late delivery rate and its measurable impact on review scores
-- Payment method and installment behaviour by region
-- Order value percentiles and revenue concentration by decile
+| Tool | Purpose |
+|------|---------|
+| MySQL 8.0 | Data storage and all SQL analysis |
+| Python (pandas, SQLAlchemy) | Data loading — reviews CSV bypass for embedded newlines |
+| Git + GitHub | Version control and portfolio |
 
----
+## 📁 Project Structure
 
-## SQL techniques demonstrated
+```
+olist-advanced-sql/
+│
+├── sql/
+│   ├── 01_setup/
+│   │   ├── 01_create_tables.sql               ← schema + foreign keys for 8 tables
+│   │   └── 02_load_data.sql                   ← bulk load 7 tables + notes on reviews
+│   │
+│   └── 02_findings/
+│       ├── top_sellers_by_category.sql         ← top-N sellers per category
+│       ├── top_cities_by_state.sql             ← top-3 cities per state
+│       ├── revenue_running_total.sql           ← rolling GMV + 7-day moving avg
+│       ├── category_orders_running_total.sql   ← running total of orders per category
+│       ├── monthly_revenue_growth.sql          ← month-over-month revenue growth (LAG)
+│       ├── category_mom_order_growth.sql       ← month-over-month order count per category
+│       ├── cohort_retention.sql                ← monthly cohort retention analysis
+│       ├── customer_order_streaks.sql          ← longest consecutive ordering streaks
+│       ├── sellers_above_state_avg_rating.sql  ← sellers outperforming state average
+│       ├── delivery_sla_review_impact.sql      ← late delivery rate and review score impact
+│       ├── payment_behaviour_by_state.sql      ← payment method and installment mix by state
+│       ├── order_value_percentiles.sql         ← order value percentiles and revenue concentration
+│       └── seller_scorecard.sql                ← capstone — seller revenue, quality and delivery
+│
+├── python/
+│   └── load_reviews.py                        ← pandas loader for order_reviews CSV
+│
+├── docs/
+│   └── business_case.md                       ← findings + business interpretation
+│
+└── data/                                      ← not tracked — download from Kaggle
+```
+
+## 📊 SQL Techniques Demonstrated
 
 | Technique | Where it's used |
 |-----------|----------------|
@@ -62,15 +108,11 @@ every production database.
 | Multi-CTE + `RANK()` + `CASE WHEN` | Capstone scorecard — 3 dimensions ranked simultaneously |
 | `DATEDIFF` + NULL handling | Delivery SLA compliance — late vs on-time classification |
 
----
+## 📈 Dataset
 
-## The dataset
-
-**Source:** [Brazilian E-Commerce Public Dataset — Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
-
-**Database:** MySQL 8.0
-
-**Scale:** 8 tables, ~530K rows total across all tables
+- **Source:** [Brazilian E-Commerce Public Dataset — Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
+- **Database:** MySQL 8.0
+- **Scale:** 8 relational tables, ~530K rows total
 
 | Table | Rows | What it contains |
 |-------|------|-----------------|
@@ -83,60 +125,26 @@ every production database.
 | sellers | 3,095 | City, state |
 | category_translation | 71 | Portuguese to English category names |
 
----
+## 🔧 Data Quality Notes
 
-## Setup notes
-
-Two real data quality issues worth documenting:
+Two real issues encountered during loading — worth documenting because they're
+exactly the kind of thing that doesn't show up in tutorials.
 
 **1. The reviews CSV breaks bulk loading.**
 
-`LOAD DATA INFILE` fails at row 77,917 because customer review
-text contains embedded newlines and imperfectly escaped quotes.
-MySQL's line parser trips on them. The fix is pandas — a proper
-CSV parser that handles multi-line quoted fields. The other 7
-tables load fine via bulk load. See `python/load_reviews.py`.
+`LOAD DATA INFILE` fails at row 77,917 because customer review text contains embedded
+newlines and imperfectly escaped quotes. MySQL's line parser trips on them. The fix is
+pandas — a proper CSV parser that handles multi-line quoted fields. The other 7 tables
+load fine via bulk load. See `python/load_reviews.py`.
 
 **2. Category names loaded with trailing carriage return characters.**
 
-Windows CRLF line endings in `product_category_name_translation.csv`
-left carriage returns on every English category name — silently
-breaking every JOIN on that column with no error, just missing data.
-A single UPDATE with REPLACE() cleaned it. Small bug, but the kind
-that takes hours to track down if you don't know to look for it.
+Windows CRLF line endings in `product_category_name_translation.csv` left carriage
+returns on every English category name — silently breaking every JOIN on that column
+with no error, just missing data. A single `UPDATE` with `REPLACE()` cleaned it.
+Small bug, but the kind that takes hours to track down if you don't know to look for it.
 
----
-
-## Repo structure
-
-    olist-advanced-sql/
-    ├── sql/
-    │   ├── 01_setup/
-    │   │   ├── 01_create_tables.sql               schema + foreign keys for 8 tables
-    │   │   └── 02_load_data.sql                   bulk load 7 tables + notes on reviews
-    │   └── 02_findings/
-    │       ├── top_sellers_by_category.sql         top-N sellers per category
-    │       ├── top_cities_by_state.sql             top-3 cities per state
-    │       ├── revenue_running_total.sql           rolling GMV + 7-day moving avg
-    │       ├── category_orders_running_total.sql   running total of orders per category
-    │       ├── monthly_revenue_growth.sql          month-over-month revenue growth (LAG)
-    │       ├── category_mom_order_growth.sql       month-over-month order count per category
-    │       ├── cohort_retention.sql                monthly cohort retention analysis
-    │       ├── customer_order_streaks.sql          longest consecutive ordering streaks
-    │       ├── sellers_above_state_avg_rating.sql  sellers outperforming state average
-    │       ├── delivery_sla_review_impact.sql      late delivery rate and review score impact
-    │       ├── payment_behaviour_by_state.sql      payment method and installment mix by state
-    │       ├── order_value_percentiles.sql         order value percentiles and revenue concentration
-    │       └── seller_scorecard.sql                capstone — seller revenue, quality and delivery
-    ├── python/
-    │   └── load_reviews.py                        pandas loader for order_reviews CSV
-    ├── docs/
-    │   └── business_case.md                       findings + business interpretation
-    └── data/                                      not tracked — download from Kaggle
-
----
-
-## Key findings
+## 🔍 Key Findings
 
 ### Seller concentration by category
 
@@ -299,6 +307,19 @@ Four seller segments: **Star Sellers** (rating ≥ 4.0, late ≤ 10%),
 | 3 | SP | R$200K | 11.0% | 3.80 ⭐ | Standard |
 | 4 | SP | R$193K | 10.2% | 4.34 ⭐ | Standard |
 | 5 | SP | R$188K | 9.6% | 3.35 ⭐ | High Revenue Risk ⚠ |
+
+## 🚧 Project Status
+
+| Phase | Status |
+|-------|--------|
+| Schema Design & Data Loading | ✅ Complete |
+| Data Quality Investigation | ✅ Complete |
+| Seller Performance Analysis | ✅ Complete |
+| Customer Behaviour & Retention | ✅ Complete |
+| Revenue & Operations Analysis | ✅ Complete |
+| Capstone Seller Scorecard | ✅ Complete |
+| Business Case Documentation | ✅ Complete |
+| GitHub Documentation | ✅ Complete |
 
 ---
 
