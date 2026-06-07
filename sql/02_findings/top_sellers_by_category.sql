@@ -1,6 +1,6 @@
 -- ============================================================
 -- Olist Advanced SQL Business Case Study
--- Lesson 01: Top-N Per Group (Window Functions - Ranking)
+-- Finding 01: Top-N Per Group (Window Functions — Ranking)
 -- Business Question: Top 3 sellers by revenue in each of
 --                    Olist's top 5 product categories
 --

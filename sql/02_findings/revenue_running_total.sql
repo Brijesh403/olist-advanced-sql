@@ -1,6 +1,6 @@
 -- ============================================================
 -- Olist Advanced SQL Business Case Study
--- Lesson 02: Window Frames — Running Total & 7-Day Moving Avg
+-- Finding 03: Window Frames — Running Total & 7-Day Moving Avg
 -- Business Question: What does Olist's daily revenue look like
 --                    as a running total and 7-day moving average?
 --

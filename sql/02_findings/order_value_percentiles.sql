@@ -60,6 +60,10 @@ FROM percentile_summary
 WHERE percentile_bucket IN (10, 25, 50, 75, 90, 95, 99, 100)
 ORDER BY percentile_bucket;
 
+-- ============================================================
+-- Query 2: Revenue concentration by decile
+-- What share of total revenue comes from the top 10% of orders?
+-- ============================================================
 WITH order_totals AS (
     SELECT
         o.order_id,

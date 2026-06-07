@@ -1,13 +1,11 @@
 # Olist Business Case — Analysis & Findings
 ### Brijesh Vaghela
 
-This is my running analysis document — what I found, what it 
-means for the business, and what question each finding raises 
-next. Updated after each analysis.
+12 findings from the Olist Brazilian E-Commerce dataset. For each finding: the business question, the SQL approach, the results, and the business insight it produces.
 
 ---
 
-## Finding 1 — Which sellers dominate each product category?
+## Finding 01 — Which sellers dominate each product category?
 
 **The question a category manager actually asks:**
 Before renewing seller contracts or adjusting commission tiers,
@@ -53,7 +51,7 @@ has platform leverage.
 
 ---
 
-## Finding 1 (geographic) — Which cities drive orders per state?
+## Finding 02 — Which cities drive orders per state?
 
 **The question an ops or growth team asks:**
 Where should we prioritise delivery infrastructure, regional
@@ -86,7 +84,7 @@ to cover a broader geographic spread.
 
 ---
 
-## Finding 2 — What does Olist's revenue trajectory look like?
+## Finding 03 — What does Olist's revenue trajectory look like?
 
 **The question a growth or finance team actually asks:**
 Not "how much did we make this month" — but "where are we in
@@ -131,7 +129,7 @@ rather than a trend signal.
 
 ---
 
-## Finding 2 (practice) — How has each category's order volume accumulated?
+## Finding 04 — How has each category's order volume accumulated?
 
 **The question:**
 Which categories show consistent month-on-month growth vs
@@ -154,7 +152,7 @@ a single period — worth investigating why.
 
 ---
 
-## Finding 3 — Is Olist's revenue growth accelerating or slowing?
+## Finding 05 — Is Olist's revenue growth accelerating or slowing?
 
 **The question a growth team asks every Monday:**
 Not "how much did we make" — but "are we growing faster or
@@ -198,7 +196,7 @@ as a beta period and excluded from trend analysis.
 
 ---
 
-## Finding 4 — Do Olist customers come back after their first order?
+## Finding 06 — Do Olist customers come back after their first order?
 
 **The question every product team needs answered:**
 What percentage of customers acquired in each month return to
@@ -259,7 +257,7 @@ dataset.
 
 ---
 
-## Finding 5 — Who are Olist's most loyal customers?
+## Finding 07 — Who are Olist's most loyal customers?
 
 **The question:**
 Given that Finding 4 showed sub-1% month-1 retention across
@@ -311,7 +309,7 @@ constant — the moment a gap appears, the constant shifts.
 
 ---
 
-## Finding 6 — Which sellers outperform their state's average rating?
+## Finding 08 — Which sellers outperform their state's average rating?
 
 **The question a marketplace ops team asks:**
 Which sellers are delivering consistently better customer
@@ -350,7 +348,7 @@ analytical rigour from naive querying.
 
 ---
 
-## Finding 7 — How much does a late delivery hurt review scores?
+## Finding 09 — How much does a late delivery hurt review scores?
 
 **The question an ops team asks:**
 Delivery SLA compliance is expensive to maintain — faster
@@ -405,7 +403,7 @@ ranking and seller acquisition.
 
 ---
 
-## Finding 8 — How does payment behaviour vary across Brazilian states?
+## Finding 10 — How does payment behaviour vary across Brazilian states?
 
 **The question a finance or growth team asks:**
 Which payment methods dominate in each region, and where are
@@ -469,7 +467,7 @@ whether those orders are margin-positive.
 
 ---
 
-## Finding 9 — What does a typical Olist order look like?
+## Finding 11 — What does a typical Olist order look like?
 
 **The question a product or pricing team asks:**
 Average order value is distorted by outliers. What does a
@@ -533,7 +531,7 @@ moves customers meaningfully up the value distribution.
 
 ---
 
-## Finding 10 (Capstone) — The Complete Seller Scorecard
+## Finding 12 — Capstone: The Complete Seller Scorecard
 
 **The question a seller success team asks every week:**
 Which sellers are genuinely performing across all dimensions —

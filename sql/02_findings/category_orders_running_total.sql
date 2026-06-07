@@ -20,12 +20,12 @@
 -- ============================================================
 USE olist;
 
-WITH P_count AS (
+WITH category_monthly AS (
     SELECT
-        p.product_category_name        AS Category_Name,
-        YEAR(o.order_purchase_timestamp)  AS Order_Year,
-        MONTH(o.order_purchase_timestamp) AS Order_Month,
-        COUNT(p.product_category_name)    AS Num_Orders
+        p.product_category_name           AS category_name,
+        YEAR(o.order_purchase_timestamp)  AS order_year,
+        MONTH(o.order_purchase_timestamp) AS order_month,
+        COUNT(p.product_category_name)    AS num_orders
     FROM orders AS o
     JOIN order_items AS oi ON o.order_id = oi.order_id
     JOIN products AS p     ON oi.product_id = p.product_id
@@ -33,20 +33,20 @@ WITH P_count AS (
              YEAR(o.order_purchase_timestamp),
              MONTH(o.order_purchase_timestamp)
 ),
-Rolling AS (
+with_running_total AS (
     SELECT
-        Category_Name,
-        Order_Year,
-        Order_Month,
-        Num_Orders,
-        SUM(Num_Orders) OVER (
-            PARTITION BY Category_Name
-            ORDER BY Order_Year, Order_Month
+        category_name,
+        order_year,
+        order_month,
+        num_orders,
+        SUM(num_orders) OVER (
+            PARTITION BY category_name
+            ORDER BY order_year, order_month
             ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-        ) AS Running_Total
-    FROM P_count
+        ) AS running_total
+    FROM category_monthly
 )
 SELECT *
-FROM Rolling
-WHERE Category_Name IS NOT NULL
-ORDER BY Category_Name, Order_Year, Order_Month;
+FROM with_running_total
+WHERE category_name IS NOT NULL
+ORDER BY category_name, order_year, order_month;
