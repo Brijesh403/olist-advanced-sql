@@ -309,4 +309,43 @@ the most elegant patterns in SQL. It works because consecutive
 integers minus consecutive row numbers always produce the same
 constant — the moment a gap appears, the constant shifts.
 
+---
+
+## Finding 6 — Which sellers outperform their state's average rating?
+
+**The question a marketplace ops team asks:**
+Which sellers are delivering consistently better customer
+experience than their regional peers? These are the benchmark
+sellers — the ones to feature, protect, and learn from.
+
+**Query approach:**
+Two-stage CTE using a window function. First aggregate avg
+rating and order count per seller, filtering to a minimum of
+10 orders for statistical reliability — a seller with one
+5-star review is noise, not signal. Then compute the state
+average using AVG() OVER (PARTITION BY seller_state), which
+calculates each state's average in one pass. Filter where
+individual avg exceeds state avg.
+
+A correlated subquery alternative was also tested — it runs
+the state average calculation once per seller row rather than
+once per state, producing a 3-row discrepancy (694 vs 691)
+due to intermediate rounding. The window function result is
+used as canonical since ROUND() is applied once at display
+time only.
+
+**Results:**
+691 sellers (out of those with 10+ orders) outperform their
+state average. SP (São Paulo) has the most — expected given
+it has the most sellers overall. The `above_avg_by` column
+shows how much each seller exceeds their state benchmark —
+useful for tiering Top Seller badges (e.g. top 10% by margin).
+
+**Business insight:**
+The minimum order threshold (HAVING COUNT >= 10) is a
+deliberate analytical choice — without it, sellers with one
+lucky 5-star review dominate the list and the finding becomes
+meaningless. This is the kind of decision that separates
+analytical rigour from naive querying.
+
 *Further findings will appear here as the analysis progresses.*
