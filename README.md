@@ -2,7 +2,6 @@
 ![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
 ![SQL](https://img.shields.io/badge/SQL-MySQL%208.0-blue)
 ![Python](https://img.shields.io/badge/Python-Pandas%20%7C%20SQLAlchemy-yellow)
-![Analyses](https://img.shields.io/badge/Analyses-13-orange)
 ![Rows](https://img.shields.io/badge/Data-530K%20Rows-red)
 
 ## 📌 Business Context
