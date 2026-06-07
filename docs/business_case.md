@@ -30,24 +30,24 @@ a different question.
 
 **Results:**
 
-| Category | #1 Revenue | #3 Revenue | Signal |
-|----------|-----------|-----------|--------|
-| watches_gifts | R$201,071 | R$169,768 | Healthy competition |
-| health_beauty | R$79,284 | R$65,817 | Healthy competition |
-| bed_bath_table | R$165,219 | R$54,552 | Concentrated — risk |
-| computers_accessories | R$53,257 | R$47,214 | Healthy competition |
-| sports_leisure | R$54,056 | R$42,094 | Moderate gap |
+| Category | Rank 1 | Rank 2 | Rank 3 | Signal |
+|----------|--------|--------|--------|--------|
+| watches_gifts | R$201,072 | R$192,093 | R$169,768 | Healthy — top 3 within 16% |
+| health_beauty | R$79,285 | R$72,472 | R$65,817 | Healthy — tight competition |
+| bed_bath_table | R$165,219 | R$152,308 | R$54,553 | Risk — rank 1 & 2 earn 3× rank 3 |
+| computers_accessories | R$53,258 | R$52,198 | R$47,215 | Healthy — within 12% |
+| sports_leisure | R$54,056 | R$42,388 | R$42,094 | Moderate — rank 2 and 3 almost level |
 
 **Business insight:**
-`bed_bath_table` is the flag. Two sellers contribute nearly 3x
-the revenue of rank 3, giving them significant negotiating
-power over Olist's commission structure. A category manager
-seeing this would prioritise retention incentives for those
-two sellers before contract renewal.
+`bed_bath_table` is the flag. Rank 1 (R$165K) and rank 2 (R$152K)
+together earn nearly 3× what rank 3 makes (R$55K) — giving those
+two sellers significant negotiating power over Olist's commission
+structure. A category manager seeing this would prioritise retention
+incentives for those two sellers before contract renewal.
 
-`watches_gifts` is the opposite — three sellers within ~18%
-of each other means healthy competition and no single seller
-has platform leverage.
+`watches_gifts` is the opposite — rank 1 (R$201K) and rank 3
+(R$170K) are within 16% of each other. Healthy competition means
+no single seller has platform leverage.
 
 ---
 
@@ -69,18 +69,35 @@ without it, tied cities could swap ranks between executions.
 
 | State | City | Orders | Rank |
 |-------|------|--------|------|
-| DF | brasilia | 2,131 | 1 |
-| DF | (next city) | ~15 | 2 |
-| SP | sao paulo | ~15,000+ | 1 |
+| SP | sao paulo | 15,540 | 1 |
+| SP | campinas | 1,444 | 2 |
+| SP | guarulhos | 1,189 | 3 |
+| RJ | rio de janeiro | 6,882 | 1 |
+| RJ | niteroi | 849 | 2 |
+| RJ | nova iguacu | 442 | 3 |
+| MG | belo horizonte | 2,773 | 1 |
+| MG | juiz de fora | 427 | 2 |
+| MG | contagem | 426 | 3 |
 | BA | salvador | 1,245 | 1 |
 | BA | feira de santana | 185 | 2 |
+| BA | vitoria da conquista | 92 | 3 |
+| DF | brasilia | 2,131 | 1 |
+| DF | taguatinga | 4 | 2 |
+| DF | guara | 2 | 3 |
 
 **Business insight:**
-DF shows extreme concentration — Brasília dominates its state
-completely. A logistics partner in DF only needs to serve one
-city to capture almost all demand. SP shows healthier
-multi-city distribution, meaning delivery infrastructure needs
-to cover a broader geographic spread.
+DF shows extreme concentration — Brasília has 2,131 orders while
+rank 2 (Taguatinga) has just 4. A logistics partner in DF only
+needs to cover one city to capture virtually all demand in the state.
+
+SP shows the healthiest multi-city distribution: Sao Paulo leads
+at 15,540 but Campinas (1,444) and Guarulhos (1,189) absorb
+meaningful volume — delivery infrastructure genuinely needs to
+cover the full metro spread here.
+
+MG is interesting: Juiz de Fora (427) and Contagem (426) are
+nearly identical, suggesting two secondary cities with comparable
+demand — unlike most states where rank 2 and 3 drop off sharply.
 
 ---
 
@@ -260,7 +277,7 @@ dataset.
 ## Finding 07 — Who are Olist's most loyal customers?
 
 **The question:**
-Given that Finding 4 showed sub-1% month-1 retention across
+Given that Finding 06 showed sub-1% month-1 retention across
 every cohort, are there any customers who genuinely kept coming
 back? And if so, how many, and how loyal are they really?
 
@@ -281,13 +298,20 @@ then keep each customer's longest streak.
 | 8d50f5ea... | 7 months | 2017-05 | 2018-08 |
 | 6469f99c... | 5 months | 2017-09 | 2018-06 |
 | 1b6c7548... | 4 months | 2017-11 | 2018-02 |
-| (8 others) | 3 months | various | various |
+| f0e310a6... | 3 months | 2017-05 | 2018-04 |
+| e0c99ffd... | 3 months | 2017-07 | 2017-09 |
+| e12f7f1e... | 3 months | 2017-08 | 2017-10 |
+| 2ddc001b... | 3 months | 2017-09 | 2018-04 |
+| 3e43e610... | 3 months | 2017-09 | 2018-02 |
+| ca77025e... | 3 months | 2017-10 | 2018-06 |
+| 935b9c5a... | 3 months | 2018-03 | 2018-05 |
+| e0836a97... | 3 months | 2018-06 | 2018-08 |
 
 **Business insight:**
 Only 11 customers out of 99,441 achieved 3 or more consecutive
 months of ordering. That is 0.011% of Olist's customer base.
 
-Combined with Finding 4's sub-1% month-1 retention, these two
+Combined with Finding 06's sub-1% month-1 retention, these two
 findings tell the same story from different angles: Olist is
 structurally a one-time-buyer marketplace. People purchase a
 specific item — furniture, electronics, home goods — and have
@@ -423,16 +447,27 @@ can have multiple payment rows (split payments — part credit
 card, part voucher). This is correct behaviour reflecting the
 data model, not a calculation error.
 
-**Results (selected states):**
+**Results (all states with 40+ orders):**
 
-| State | Orders | Credit Card | Boleto | Avg Installments | Avg Order Value |
-|-------|--------|------------|--------|-----------------|----------------|
+| State | Orders | Credit Card % | Boleto % | Avg Installments | Avg Order Value |
+|-------|--------|--------------|---------|-----------------|----------------|
 | SP | 41,418 | 77.1% | 19.7% | 2.6 | R$137 |
 | RJ | 12,766 | 80.1% | 16.8% | 3.0 | R$158 |
+| MG | 11,571 | 78.0% | 19.8% | 3.0 | R$154 |
+| RS | 5,441 | 72.9% | 24.9% | 3.0 | R$156 |
+| PR | 5,023 | 75.0% | 22.2% | 2.9 | R$153 |
+| SC | 3,618 | 74.6% | 23.2% | 2.9 | R$164 |
+| BA | 3,364 | 78.7% | 18.2% | 3.2 | R$170 |
+| DF | 2,133 | 79.5% | 18.5% | 2.7 | R$161 |
+| GO | 2,007 | 75.3% | 22.3% | 3.0 | R$163 |
+| PE | 1,647 | 80.8% | 16.8% | 3.5 | R$188 |
 | CE | 1,329 | 82.0% | 15.2% | 3.5 | R$199 |
-| AL | 412 | 82.5% | 16.5% | 3.7 | R$226 |
-| AP | 68 | 69.1% | 29.4% | 2.6 | R$232 |
 | MA | 743 | 71.7% | 27.1% | 3.1 | R$199 |
+| PB | 534 | 80.0% | 17.4% | 3.8 | R$248 |
+| AL | 412 | 82.5% | 16.5% | 3.7 | R$226 |
+| TO | 279 | 70.3% | 27.2% | 3.0 | R$204 |
+| AP | 68 | 69.1% | 29.4% | 2.6 | R$232 |
+| RR | 45 | 71.1% | 28.9% | 2.8 | R$221 |
 
 **Business insights:**
 
@@ -558,26 +593,26 @@ segments. Everything learned in Findings 1-9 is used here.
 
 | Insight | Detail |
 |---------|--------|
-| Rank 1 by revenue | R$229K, 11.6% late, 4.13 stars — Standard, not Star |
-| Rank 5 — High Revenue Risk | R$187K revenue, 3.35 stars — volume masking quality failure |
-| Best overall (rank 2) | BA seller, 4% late, 4.08 stars — Star Seller |
-| Geographic concentration | 23 of top 30 revenue sellers are in SP |
+| Rank 1 by revenue | R$229K, 11.6% late, 4.13 stars — Standard, not Star Seller |
+| Rank 5 — High Revenue Risk | R$188K revenue, 3.35 stars — volume masking a quality failure |
+| Best overall (rank 2) | BA seller, R$223K revenue, 4.0% late, 4.08 stars — Star Seller |
+| Geographic concentration | 20 of the top 30 revenue sellers are in SP |
 
 **Business insight:**
 The most important finding in the scorecard is rank 5 —
-a seller doing R$187K in revenue with a 3.35 average rating.
+a seller doing R$188K in revenue with a 3.35 average rating.
 Without a multi-dimensional view, this seller looks like a
 success story. With it, they're a platform risk. High revenue
 gives sellers negotiating leverage; poor quality costs the
 platform in customer trust and repeat purchase rates.
 
 The BA Star Seller at rank 2 is the counter-example: 358
-orders, 4% late delivery, 4.08 rating. Lower volume, higher
-quality, better platform citizen. A marketplace's seller
-success strategy needs both — protect the high-revenue sellers
-while elevating the high-quality ones.
+orders, 4.0% late delivery, 4.08 rating, R$223K revenue. Lower
+volume than rank 1 but higher quality — better platform citizen.
+A marketplace's seller success strategy needs both: protect the
+high-revenue sellers while elevating the high-quality ones.
 
-23 of the top 30 revenue sellers are in SP. Olist's revenue
+20 of the top 30 revenue sellers are in SP. Olist's revenue
 base is geographically concentrated — a risk if SP market
 conditions change or a competitor targets SP sellers
 specifically.
@@ -588,4 +623,4 @@ simultaneous ranking across multiple dimensions, NTILE()
 for quartile segmentation, conditional business logic via
 CASE WHEN, and minimum threshold filtering for analytical
 reliability — all in service of a single business decision
-framework.
+framework. Everything from Findings 01–11 feeds into this view.

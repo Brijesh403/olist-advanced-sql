@@ -67,7 +67,7 @@
 ## Key Findings
 
 **Seller concentration risk**  
-`bed_bath_table` top 3 sellers: R$165K / R$152K / R$54K — a steep drop to rank 3. Two sellers dominate and hold significant commission negotiation leverage. `watches_gifts` top 3: R$201K / R$192K / R$169K — healthy competition, no outsized leverage.
+`bed_bath_table` top 3 sellers: R$165K / R$152K / R$55K — a steep drop to rank 3. Two sellers dominate and hold significant commission negotiation leverage. `watches_gifts` top 3: R$201K / R$192K / R$170K — healthy competition, top 3 within 16% of each other.
 
 **The one-time-buyer problem**  
 Month-1 retention is below 1% across every single cohort. The November 2017 Black Friday cohort acquired 7,270 customers — only 40 returned the next month (0.6%). Only 11 customers out of 99,441 ordered in 3+ consecutive months. Olist's revenue depends entirely on continuous new customer acquisition. Loyalty programs and reactivation campaigns would have near-zero ROI at this retention rate.
@@ -88,7 +88,7 @@ Credit card dominates nationally (69–84%) but boleto usage peaks in Brazil's p
 Median order: R$104. Top 10% of orders (above R$307) generate 38.1% of total revenue; top 20% generate over 53%. Max single order: R$13,664 — nearly 130x the median. Average order value is a misleading metric for this dataset.
 
 **Capstone: the risk hiding in revenue**  
-The rank-5 seller by revenue does R$187K but averages just 3.35 stars — high revenue masking a platform trust risk. 23 of the top 30 revenue sellers are in SP, confirming geographic concentration risk. The best overall performer: a BA seller at rank 2, 4% late delivery rate, 4.08 stars.
+The rank-5 seller by revenue does R$188K but averages just 3.35 stars — high revenue masking a platform trust risk. 20 of the top 30 revenue sellers are in SP, confirming geographic concentration risk. The best overall performer: a BA seller at rank 2, R$223K revenue, 4.0% late delivery rate, 4.08 stars.
 
 ---
 
@@ -129,19 +129,6 @@ Windows CRLF line endings in `product_category_name_translation.csv` left `\r` o
     │   └── business_case.md                       full findings + business interpretation
     └── data/                                      not tracked — download from Kaggle
 
----
-
-## How to Run
-
-1. Download the [Olist dataset from Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) and place all CSVs in `data/`
-2. Run `sql/01_setup/01_create_tables.sql` in MySQL Workbench or the CLI
-3. Update the file paths in `sql/01_setup/02_load_data.sql` to match your MySQL `secure_file_priv` directory
-4. Run `sql/01_setup/02_load_data.sql` to load the 7 bulk-loadable tables
-5. Install Python dependencies: `pip install pandas sqlalchemy pymysql`
-6. Set your DB credentials as environment variables, then run `python/load_reviews.py` to load order reviews
-7. Run any file in `sql/02_findings/` independently — each query is self-contained
-
----
 
 **Brijesh Vaghela** · [LinkedIn](https://www.linkedin.com/in/brijesh-vaghela) · [GitHub](https://github.com/Brijesh403)  
 See also: [ShopSense Product Analytics](https://github.com/Brijesh403/shopsense-product-analytics)
